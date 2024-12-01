@@ -152,7 +152,9 @@ def view_single_data(data_list):
             try:
                 data_task.data_from_csv()
                 for task_id in object_.task_list:
-                    linked_tasks.append(data_task.get_object(task_id).convert_to_dict())
+                    task = data_task.get_object(task_id).convert_to_dict()
+                    task.pop("detailed_description", None)
+                    linked_tasks.append(task)
                 if linked_tasks:
                     tasks_display = tabulate(
                         linked_tasks, headers="keys", tablefmt="grid", maxcolwidths=30
