@@ -68,7 +68,8 @@ class Data:
         Raises:
             ValueError: If no data is present to write
         """
-
+        if not os.path.exists("DB"):
+            os.makedirs("./DB")
         with open(self.path_file, "w", newline="") as file:
             if self.data:
                 fieldnames = list(self.data[0].keys())

@@ -95,6 +95,7 @@ def main() -> None:
                                 input("Press Enter to continue ➡️ ... ")
                 case "3":
                     # Exit application
+                    print("Goodbye! See you soon !! =)")
                     break
                 case _:
                     # Handle invalid option
