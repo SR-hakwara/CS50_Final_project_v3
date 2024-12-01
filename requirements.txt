@@ -1,0 +1,4 @@
+tabulate # for diplaying formated data in command line interface
+black #for formating code
+mypy # for chek hint type
+pytest # for testing
