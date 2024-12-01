@@ -13,7 +13,7 @@ class Project(DataType):
         - Add tasks to the project with validation
     Attributes:
         task_list (list): A list to store tasks associated with the project
-    Inherits from:
+    Inherited from:
         DataType: A parent class providing basic data type functionality
     """
 

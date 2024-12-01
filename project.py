@@ -15,7 +15,7 @@ def main() -> None:
         - Manage tasks (view, add, update, delete)
         - Exit the application
     """
-    try:
+    try:  # catch CTRL+D and print an exit message
         while True:
             project_list: Projects = Projects()
             task_list: Tasks = Tasks()  # Object Tasks
@@ -39,7 +39,7 @@ def main() -> None:
                                 print(view_single_data(project_list))
                                 input("Press Enter to continue ➡️ ... ")
                             case "3":
-                                # Add new project
+                                # Add a new project
                                 add_data(project_list)
                                 input("Press Enter to continue ➡️ ... ")
                             case "4":
@@ -49,7 +49,7 @@ def main() -> None:
                                 # Delete project
                                 delete_data(project_list, task_list)
                             case "6":
-                                # Return to main menu
+                                # Return to the main menu
                                 break
                             case "7":
                                 # Exit application
@@ -74,7 +74,7 @@ def main() -> None:
                                 print(view_single_data(task_list))
                                 input("Press Enter to continue ➡️ ... ")
                             case "3":
-                                # Add new task
+                                # Add a new task
                                 add_data(task_list)
                                 input("Press Enter to continue ➡️ ... ")
                             case "4":
@@ -84,7 +84,7 @@ def main() -> None:
                                 # Delete task
                                 delete_data(task_list, project_list)
                             case "6":
-                                # Return to main menu
+                                # Return to the main menu
                                 break
                             case "7":
                                 # Exit application
@@ -100,9 +100,10 @@ def main() -> None:
                     # Handle invalid option
                     print(invalid_option())
                     input("Press Enter to continue ➡️ ... ")
-            sys.exit()
+        sys.exit()
     except EOFError:
-        print ("Goodbye! See you soon !! =)")
+        print("Goodbye! See you soon !! =)")
+        sys.exit()
 
 
 def view_all(data_list: Data) -> str:
@@ -124,7 +125,8 @@ def view_all(data_list: Data) -> str:
             data_.append(obj_dict)
         return tabulate(data_, headers="keys", tablefmt="grid", maxcolwidths=30)
     except ValueError as e:
-        return str(e)
+        print(e)
+        return ""
 
 
 def view_single_data(data_list):
@@ -135,20 +137,38 @@ def view_single_data(data_list):
     Returns:
        str: display a single object with tabulate module or error message
     """
-
-    id_ = input(f"➡️ Enter the {data_list.data_type} id you want to view: ")
     try:
         data_list.data_from_csv()
+        id_ = input(f"➡️ Enter the {data_list.data_type} id you want to view: ")
         object_ = data_list.get_object(id_)
         data_ = [object_.__dict__]
-        return tabulate(data_, headers="keys", tablefmt="grid", maxcolwidths=30)
+        single_data = tabulate(data_, headers="keys", tablefmt="grid", maxcolwidths=30)
+        # If the displayed object is a project, display its linked tasks as well if they exist.
+        if data_list.data_type == "project":
+            linked_tasks = []
+            data_task = Tasks()
+            try:
+                data_task.data_from_csv()
+                for task_id in object_.task_list:
+                    linked_tasks.append(data_task.get_object(task_id).convert_to_dict())
+                if linked_tasks:
+                    tasks_display = tabulate(
+                        linked_tasks, headers="keys", tablefmt="grid", maxcolwidths=30
+                    )
+                    single_data += "\n\nProject Tasks:\n" + tasks_display
+            except ValueError:
+                ...
+        return single_data
+
     except ValueError as e:
-        return e
+        print(e)
+        return ""
 
 
 def add_data(data_list) -> None:
     """
-    Add a new project or task to the data_list. we don't use objects in this case but just data_list.data.
+    Add a new project or task to the data_list.
+    We don't use objects in this case but just data_list.data.
     Args:
         data_list : Data [Projects or Tasks]: List to add data to
     Returns:
@@ -201,22 +221,18 @@ def update_data(data_list_1, data_list_2) -> None:
     we import both projects and tasks to allow change of task_list and project_linked in same time
     Update an existing project or task, potentially modifying related data (task list and linked project).
     Args:
-        data_list_1 (Data [Projects or  Tasks]): Primary data list to update
-        data_list_2 (Data [Projects or  Tasks]): Secondary data list for updated related property
+        data_list_1 (Data [Projects or Tasks]): Primary data list to update
+        data_list_2 (Data [Projects or Tasks]): Secondary data list for updated related property
     Returns:
         None
     """
-    try:
+    try:  #
         data_list_1.data_from_csv()
-    except ValueError:
-        data_list_1.data = []
-    try:
-        data_list_2.data_from_csv()
-    except ValueError:
-        data_list_2.data = []
-
-    try:
-        # Get object to update
+        try:
+            data_list_2.data_from_csv()
+        except ValueError:
+            data_list_2.data = []
+        # Get an object to update
         id_ = input(f"Enter {data_list_1.data_type} ID you want to update: ")
         data_ = data_list_1.get_object(id_)
         print(
@@ -238,11 +254,11 @@ def update_data(data_list_1, data_list_2) -> None:
                 value = input(
                     "Enter the new value of task you want to add to this project: "
                 ).strip()
-                # Validate task usage in other project
+                # Validate task usage in another project
                 if not value in data_.task_list and value in used_task:
                     raise ValueError(f"⚠️ this task is already used in other project ⚠️")
                 if value in data_.task_list:
-                    # ask for Removing task from project if the task is already in task_list
+                    # ask for Removing a task from the project if the task is already in task_list
                     confirm = (
                         input(
                             f"⚠️ this task is already in task_list ⚠️ you want to delete it ? (yes/no): "
@@ -253,14 +269,14 @@ def update_data(data_list_1, data_list_2) -> None:
                     if confirm in ["yes", "y"]:
                         # remove the task from the project task list
                         data_.task_list.remove(value)
-                        # delete the linked_project from the task removed
+                        # delete project id from linked_project for the task removed
                         data_list_2.get_object(value).linked_project = ""
                         save_change(data_list_1)
                         save_change(data_list_2)
                     else:
                         raise ValueError("🔴 the update has been canceled 🔴")
                 else:
-                    # add the task into task list
+                    # add the task into the task list
                     data_.task_list += [value]
                     # add the project id to the task linked project
                     data_list_2.get_object(value).linked_project = id_
@@ -294,48 +310,52 @@ def delete_data(data_list_1, data_list_2) -> None:
     Returns:
         None
     """
+    try:
+        data_list_1.data_from_csv()
+        id_ = input(
+            f"enter the {data_list_1.data_type} ID you want to delete: "
+        ).strip()
+        object_ = data_list_1.get_object(id_)
+        data_ = [object_.convert_to_dict()]
+        print(tabulate(data_, headers="keys", tablefmt="grid", maxcolwidths=30))
+        # Confirm and delete the object
+        confirmer = (
+            input(f"Are You sur you want delete this {data_list_1.data_type} (yes/no: ")
+            .strip()
+            .lower()
+        )
+        if confirmer in ["yes", "y"]:
+            # Delete the object
+            data_list_1.delete_object(object_)
+            save_change(data_list_1)
+            try:
+                # Handle related objects
+                if data_list_1.data_type == "project":
+                    try:  # if a task linked to this project, delete "linked_project" property value
+                        data_list_2.data_from_csv()
+                        ob1 = data_list_2.get_object_by_property_value(
+                            "linked_project", id_
+                        )
+                        setattr(ob1, "linked_project", "")
+                        save_change(data_list_2)
+                    except ValueError:
+                        ...
+                if data_list_1.data_type == "task":
+                    try:  # if a project have this task in task_list, remove the task id
+                        data_list_2.data_from_csv()
+                        ob2 = data_list_2.get_object_by_property_value("task_list", id_)
+                        ob2.task_list.remove(id_)
+                        save_change(data_list_2)
+                    except ValueError:
+                        ...
+            except ValueError as e:
+                print(e)
 
-    id_ = input(f"enter the {data_list_1.data_type} ID you want to delete: ").strip()
-    data_list_1.data_from_csv()
-    object_ = data_list_1.get_object(id_)
-    data_ = [object_.convert_to_dict()]
-    print(tabulate(data_, headers="keys", tablefmt="grid", maxcolwidths=30))
-    # Confirm and delete object
-    confirmer = (
-        input(f"Are You sur you want delete this {data_list_1.data_type} (yes/no: ")
-        .strip()
-        .lower()
-    )
-    if confirmer in ["yes", "y"]:
-        # Delete the object
-        data_list_1.delete_object(object_)
-        save_change(data_list_1)
-        try:
-            # Handle related objects
-            if data_list_1.data_type == "project":
-                try:  # if a task linked to this project delete "linked_project" property value
-                    data_list_2.data_from_csv()
-                    ob1 = data_list_2.get_object_by_property_value(
-                        "linked_project", id_
-                    )
-                    setattr(ob1, "linked_project", "")
-                    save_change(data_list_2)
-                except ValueError as e:
-                    print(e)
-            if data_list_1.data_type == "task":
-                try:  # if a project have this task in task_list remove the task id
-                    data_list_2.data_from_csv()
-                    ob2 = data_list_2.get_object_by_property_value("task_list", id_)
-                    ob2.task_list.remove(id_)
-                    save_change(data_list_2)
-                except ValueError:
-                    ...
-        except ValueError as e:
-            print(e)
-
-        print(f"🟢 your {data_list_1.data_type} has been deleted successfully 🟢")
-    else:
-        print("🔴 the deletion has been canceled 🔴")
+            print(f"🟢 your {data_list_1.data_type} has been deleted successfully 🟢")
+        else:
+            print("🔴 the deletion has been canceled 🔴")
+    except ValueError as e:
+        print(e)
 
 
 def save_change(data_list) -> None:
@@ -353,7 +373,7 @@ def save_change(data_list) -> None:
 
 def new_id(list_: Data) -> str:
     """
-    this way to generate ID, allow us to reuse ID if project or task deleted
+    this way to generate ID, allow us to reuse ID if the project or the task are deleted
     otherwise we could use new_id=max(all_ids)+1
     Args:
         list_ (Data): Data list to check existing IDs
@@ -369,7 +389,7 @@ def new_id(list_: Data) -> str:
 
 def is_valid_deadline(dead_line: str, today: date = date.today()) -> bool:
     """
-    Validate deadline format YYYY-MM-DD and ensure it's not in the past.
+    Validate deadline format YYYY-MM-DD and ensure it is not in the past.
     Args:
         dead_line (str): Deadline date string
         today (date, optional for testing purpose): Reference date for validation. Defaults to today.

@@ -89,7 +89,7 @@ class Data:
         """
         return [int(data["id"]) for data in self.data]
 
-    def get_object(self, id_:str) -> DataType:
+    def get_object(self, id_: str) -> DataType:
         """
         Retrieve an object from self.objects by its ID.
         Args:
@@ -188,5 +188,5 @@ class Tasks(Data):
     Inherits from Data and initializes with task-specific file path.
     """
 
-    def __init__(self, path_file=PROJECTS_File):
+    def __init__(self, path_file=TASKS_File):
         super().__init__(path_file, "task")

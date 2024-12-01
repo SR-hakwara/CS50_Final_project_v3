@@ -2,7 +2,7 @@
 class DataType:
     """
     This class represents a data type with various descriptive attributes.
-    It allows to convert its data into a dictionary or to initialize it from a dictionary.
+    It allows converting its data into a dictionary or to initialize it from a dictionary.
     Attributes:
         id (str): Unique identifier of the object
         name (str): Name of the data type
@@ -44,7 +44,7 @@ class DataType:
         Updates the object's attributes from a given dictionary.
         The input dictionary must contain all keys corresponding to the class's attributes.
         Args:
-            data (dict) : input dictionary contain all keys corresponding to the class's attributes.
+            data (dict): input dictionary contains all keys corresponding to the class's attributes.
         """
         self.id = data["id"]
         self.name = data["name"]

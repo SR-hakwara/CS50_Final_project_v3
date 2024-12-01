@@ -2,6 +2,7 @@ import pytest
 
 from project import *
 from controller import Projects, Tasks
+from datetime import date, timedelta
 
 # this file was reformated by black module
 PROJECT_CSV = "temp_projects.csv"
@@ -50,7 +51,7 @@ def test_project_add(monkeypatch):
     # Create Projects instance
     project_list = Projects(PROJECT_CSV)
 
-    # Add project
+    # Add a project
     add_data(project_list)
 
     # Verify project was added
@@ -128,7 +129,7 @@ def test_project_delete(monkeypatch):
     # Perform delete
     delete_data(project_list, task_list)
 
-    # Verify deletion. the project file mus be empty, and trying to import data from it raise ValueError
+    # Verify deletion. The project file must be empty, and trying to import data from it raises ValueError
     with pytest.raises(
         ValueError,
         match="⚠️ the file for your projects is empty. Choose option 3 to add some ⚠️",
@@ -217,7 +218,7 @@ def test_view_single_project(monkeypatch):
     # Simulate selecting project ID
     simulate_input(monkeypatch, ["1"])
 
-    # View single project
+    # View a single project
     result = view_single_data(project_list)
 
     # Verify result contains project details
@@ -227,8 +228,115 @@ def test_view_single_project(monkeypatch):
     assert "detailed_description" in result
     # make sur that all data are correctly display with tabulate()
     simulate_input(monkeypatch, ["1"])
+
     assert view_single_data(project_list) == tabulate(
         project_list.data, headers="keys", tablefmt="grid", maxcolwidths=30
     )
 
     clean_csv_files()
+
+
+def test_file_exist(capsys):
+    """
+    If the file doesn't exist, view_all(),view_single, update, and delete must print a file doesn't exist massage.
+    Args:
+        capsys: captures anything written to stdout, to verify the printed message.
+    """
+    project_list: Projects = Projects(PROJECT_CSV)
+    task_list: Tasks = Tasks(TASK_CSV)
+
+    view_all(project_list)
+    captured = capsys.readouterr()
+    assert (
+        "⚠️ the file for your projects does not exist. Choose option 3 to add some ⚠️"
+        in captured.out
+    )
+    view_single_data(project_list)
+    captured = capsys.readouterr()
+    assert (
+        "⚠️ the file for your projects does not exist. Choose option 3 to add some ⚠️"
+        in captured.out
+    )
+    update_data(project_list, task_list)
+    captured = capsys.readouterr()
+    assert (
+        "⚠️ the file for your projects does not exist. Choose option 3 to add some ⚠️"
+        in captured.out
+    )
+    delete_data(project_list, task_list)
+    captured = capsys.readouterr()
+    assert (
+        "⚠️ the file for your projects does not exist. Choose option 3 to add some ⚠️"
+        in captured.out
+    )
+
+
+def test_file_empty(capsys):
+    """
+    If The file is empty, view_all, view_single, update and delete must print a file empty massage.
+    Args:
+        capsys : captures anything written to stdout, to verify the printed message
+    """
+    project_list: Projects = Projects(PROJECT_CSV)
+    task_list: Tasks = Tasks(TASK_CSV)
+    # create an empty file
+    with open(PROJECT_CSV, "w"):
+        ...
+
+    view_all(project_list)
+    captured = capsys.readouterr()
+    assert (
+        "⚠️ the file for your projects is empty. Choose option 3 to add some ⚠️"
+        in captured.out
+    )
+    view_single_data(project_list)
+    captured = capsys.readouterr()
+    assert (
+        "⚠️ the file for your projects is empty. Choose option 3 to add some ⚠️"
+        in captured.out
+    )
+    update_data(project_list, task_list)
+    captured = capsys.readouterr()
+    assert (
+        "⚠️ the file for your projects is empty. Choose option 3 to add some ⚠️"
+        in captured.out
+    )
+    delete_data(project_list, task_list)
+    captured = capsys.readouterr()
+    assert (
+        "⚠️ the file for your projects is empty. Choose option 3 to add some ⚠️"
+        in captured.out
+    )
+
+    clean_csv_files()
+
+
+def test_is_valid_dead_line(monkeypatch, capsys):
+    # Simulate user inputs for project details
+    inputs = [
+        "Test Project",  # name
+        "A test project description",  # description
+        "Detailed test project description",  # detailed description
+        f"{date.today() - timedelta(days=1)}",  # not a valid deadline less than to day date
+        "2025-1-12",  # not a valid deadline not in YYYY-MM-DD format
+        "2025-31-12",  # not a valid deadline in YYYY-DD-MM format
+    ]
+
+    # Simulate inputs
+    simulate_input(monkeypatch, inputs)
+
+    # Create Projects instance
+    project_list = Projects(PROJECT_CSV)
+
+    # Add a project
+    add_data(project_list)
+
+    # Verify project was added
+    assert len(project_list.data) == 0
+
+    captured = capsys.readouterr()
+    assert (
+        "⚠️ Deadline must be today or later, and in the format (YYYY-MM-DD, e.g., 2025-01-30) ⚠️"
+        in captured.out
+    )
+    assert "⚠️ 3 wrong attempt start again ⚠️" in captured.out
