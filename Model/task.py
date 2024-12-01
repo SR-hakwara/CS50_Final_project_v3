@@ -11,9 +11,9 @@ class Task(DataType):
         - Convert the task data to a dictionary
         - Add a linked project to the task with validation
     Attributes:
-        linked_project (str): A list to store tasks associated with the project
+        linked_project (str): A list to store tasks associated with the project.
     Inherits from:
-        DataType: A parent class providing basic data type functionality
+        DataType: A parent class providing basic data type functionality.
     """
 
     def __init__(self):

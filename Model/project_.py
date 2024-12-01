@@ -12,9 +12,9 @@ class Project(DataType):
         - Convert the project data to a dictionary
         - Add tasks to the project with validation
     Attributes:
-        task_list (list): A list to store tasks associated with the project
+        task_list (list): A list to store tasks associated with the project.
     Inherited from:
-        DataType: A parent class providing basic data type functionality
+        DataType: A parent class providing basic data type functionality.
     """
 
     def __init__(self):

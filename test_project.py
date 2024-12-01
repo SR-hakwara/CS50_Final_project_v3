@@ -329,6 +329,7 @@ def test_is_valid_dead_line(monkeypatch, capsys):
     project_list = Projects(PROJECT_CSV)
 
     # Add a project
+
     add_data(project_list)
 
     # Verify project was added

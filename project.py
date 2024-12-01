@@ -133,10 +133,11 @@ def view_single_data(data_list):
     """
     Display details of a single object by its ID.
     Args:
-        data_list : Data [Projects or Tasks]: List of projects or tasks
+        data_list : Data [Projects or Tasks]: List of projects or tasks.
     Returns:
-       str: display a single object with tabulate module or error message
+       str: display a single object with tabulate module or error message.
     """
+
     try:
         data_list.data_from_csv()
         id_ = input(f"➡️ Enter the {data_list.data_type} id you want to view: ")

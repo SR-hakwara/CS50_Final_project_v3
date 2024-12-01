@@ -10,7 +10,7 @@ class DataType:
         detailed_description (str): Detailed description of the object
         creation_date (str): Creation date of the data type (expected format: string)
         dead_line (str): Deadline associated with the data type (expected format: string)
-        state (str): State or status of the data type
+        state (str): State or status of the data type.
     """
 
     def __init__(self):
