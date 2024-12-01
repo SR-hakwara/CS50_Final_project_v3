@@ -34,12 +34,12 @@ class Data:
 
     def data_from_csv(self) -> list:
         """
-        Read data from CSV file and convert to list of dictionaries
+        Read data from CSV file and convert to a list of dictionaries
         and with self.get_objects() to objects.
         Returns:
             list: List of dictionaries containing CSV data
         Raises:
-            ValueError: If file is empty or does not exist
+            ValueError: If a file is empty or doesn't exist
         """
         data = []
         if os.path.exists(self.path_file):
@@ -84,7 +84,7 @@ class Data:
     def get_all_ids(self) -> list:
         """
         Get all IDs from the data.
-        convert it to int so we can use it to create new unique id
+        Convert it to int so we can use it to create new unique id
         Returns:
             list[int]: List of all object IDs
         """
@@ -124,7 +124,7 @@ class Data:
 
     def delete_object(self, object_) -> None:
         """
-        Remove an object from the objects list.
+        Remove an object from the object list.
 
         Args:
             object_ (DataType): Object to be removed
@@ -134,7 +134,7 @@ class Data:
     def get_objects(self) -> list:
         """
         Convert dictionary data to objects.
-        put the object in self.objects
+        Put the object in self.objects
         Returns:
             list[DataType]: List of created objects
         """
@@ -161,7 +161,7 @@ class Data:
     def get_all_property_value(self, property_) -> list:
         """
         Get all values for a specific property across objects.
-        used for retrieving all used task id in project task list
+        Used for retrieving all used tasks id in project task list
         Args:
             property_ (str): Name of the property to retrieve
         Returns:
@@ -176,7 +176,7 @@ class Data:
 class Projects(Data):
     """
     Specialized Data class for managing project-related data.
-    Inherits from Data and initializes with project-specific file path.
+    Inherits from Data and initializes with a project-specific file path.
     """
 
     def __init__(self, path_file=PROJECTS_File):
@@ -186,7 +186,7 @@ class Projects(Data):
 class Tasks(Data):
     """
     Specialized Data class for managing task-related data.
-    Inherits from Data and initializes with task-specific file path.
+    Inherits from Data and initializes with a task-specific file path.
     """
 
     def __init__(self, path_file=TASKS_File):

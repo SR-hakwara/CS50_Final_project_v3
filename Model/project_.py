@@ -45,7 +45,7 @@ class Project(DataType):
         super().data_from_dict(data)
         if (
             data["task_list"] in self.task_list and self.task_list
-        ):  # if self task list not empty and contain already de new value
+        ):  # if self.task list is not empty and contain already de new value
             raise ValueError(
                 f"🔴 The Task is already linked to this project. task list = {self.task_list} 🔴"
             )
