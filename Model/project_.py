@@ -47,7 +47,7 @@ class Project(DataType):
             data["task_list"] in self.task_list and self.task_list
         ):  # if self.task list is not empty and contain already de new value
             raise ValueError(
-                f"🔴 The Task is already linked to this project. task list = {self.task_list} 🔴"
+                f"🔴  The Task is already linked to this project. task list = {self.task_list} 🔴"
             )
         else:
             # Use ast.literal_eval to safely convert the string representation of a list to an actual list

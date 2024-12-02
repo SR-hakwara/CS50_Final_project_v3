@@ -6,42 +6,47 @@ import re
 
 # this file was reformated by black module
 
-
+S="\033[1m" #start bold
+E="\033[0m" #end bold
 def main() -> None:
     """
     - Main application loop providing a menu-driven interface for managing projects and tasks.
-    Allows users to:
+    - Allows users to:
         - Manage projects (view, add, update, delete)
         - Manage tasks (view, add, update, delete)
         - Exit the application
     """
     try:  # catch CTRL+D and print an exit message
+        print(
+            f"""\n\033[92m★★★{E} {S} Welcome to CS50 Poject{E} \033[92m★★★{E}
+\033[92m▶▶{E} {S} Project and Tasks Management{E} \033[92m◀◀{E}"""
+        )
         while True:
             project_list: Projects = Projects()
             task_list: Tasks = Tasks()  # Object Tasks
 
             print(get_general_option())
-            choice_g: str = input("Choose an option: ").strip()
+            choice_g: str = input(f"🔵 {E}Choose an option:{E} ").strip()
             match choice_g:
                 case "1":
                     # Project management submenu
 
                     while True:
                         print(get_project_option())
-                        choice_project = input("Choose an option: ").strip()
+                        choice_project = input(f"🔵 {S}Choose an option:{E} ").strip()
                         match choice_project:
                             case "1":
                                 # Display all projects
                                 print(view_all(project_list))
-                                input("Press Enter to continue ➡️ ... ")
+                                input(f"{S}Press Enter to continue{E} ➡️  ... ")
                             case "2":
                                 # Display single project details
                                 print(view_single_data(project_list))
-                                input("Press Enter to continue ➡️ ... ")
+                                input(f"{S}Press Enter to continue{E} ➡️  ... ")
                             case "3":
                                 # Add a new project
                                 add_data(project_list)
-                                input("Press Enter to continue ➡️ ... ")
+                                input(f"{S}Press Enter to continue{E} ➡️  ... ")
                             case "4":
                                 # Update project
                                 update_data(project_list, task_list)
@@ -57,26 +62,26 @@ def main() -> None:
                             case _:
                                 # Handle invalid option
                                 print(invalid_option())
-                                input("Press Enter to continue ➡️ ... ")
+                                input("Press Enter to continue ➡️  ... ")
                         ...
                 case "2":
                     # Task management submenu
                     while True:
                         print(get_task_option())
-                        choice_task: str = input("Choose an option: ").strip()
+                        choice_task: str = input("🔵 Choose an option: ").strip()
                         match choice_task:
                             case "1":
                                 # Display all tasks
                                 print(view_all(task_list))
-                                input("Press Enter to continue ➡️ ... ")
+                                input("Press Enter to continue ➡️  ... ")
                             case "2":
                                 # Display single task details
                                 print(view_single_data(task_list))
-                                input("Press Enter to continue ➡️ ... ")
+                                input("Press Enter to continue ➡️  ... ")
                             case "3":
                                 # Add a new task
                                 add_data(task_list)
-                                input("Press Enter to continue ➡️ ... ")
+                                input("Press Enter to continue ➡️  ... ")
                             case "4":
                                 # Update task
                                 update_data(task_list, project_list)
@@ -92,7 +97,7 @@ def main() -> None:
                             case _:
                                 # Handle invalid option
                                 print(invalid_option())
-                                input("Press Enter to continue ➡️ ... ")
+                                input("Press Enter to continue ➡️  ... ")
                 case "3":
                     # Exit application
                     print("Goodbye! See you soon !! =)")
@@ -100,10 +105,10 @@ def main() -> None:
                 case _:
                     # Handle invalid option
                     print(invalid_option())
-                    input("Press Enter to continue ➡️ ... ")
+                    input("Press Enter to continue ➡️  ... ")
         sys.exit()
     except EOFError:
-        print("Goodbye! See you soon !! =)")
+        print(f"\n👋👋 {S} Goodbye! See you soon !!{E}🙂")
         sys.exit()
 
 
@@ -141,7 +146,7 @@ def view_single_data(data_list):
 
     try:
         data_list.data_from_csv()
-        id_ = input(f"➡️ Enter the {data_list.data_type} id you want to view: ")
+        id_ = input(f"➡️  Enter the {data_list.data_type} id you want to view: ")
         object_ = data_list.get_object(id_)
         data_ = [object_.__dict__]
         single_data = tabulate(data_, headers="keys", tablefmt="grid", maxcolwidths=30)
@@ -186,19 +191,19 @@ def add_data(data_list) -> None:
     id_ = new_id(data_list)
     data_input = {
         "id": id_,
-        "name": input(f"➡️ Enter {data_list.data_type} name: ").strip(),
+        "name": input(f"➡️  Enter {data_list.data_type} name: ").strip(),
         "description": input(
-            f"➡️ Entrer a short description for the {data_list.data_type}: "
+            f"➡️  Entrer a short description for the {data_list.data_type}: "
         ).strip(),
         "detailed_description": input(
-            f"➡️ Enter a detailed description for the {data_list.data_type}: "
+            f"➡️  Enter a detailed description for the {data_list.data_type}: "
         ).strip(),
         "creation_date": date.today(),
     }
     # Validate deadline with maximum 3 attempts
     compter = 0
     while compter < 3:
-        dead_line = input("➡️ Enter dead line (YYYY-MM-DD ie:2024-12-31): ")
+        dead_line = input("➡️  Enter dead line (YYYY-MM-DD ie:2024-12-31): ")
         if is_valid_deadline(dead_line):
             data_input["dead_line"] = dead_line
             break
@@ -237,26 +242,26 @@ def update_data(data_list_1, data_list_2) -> None:
         except ValueError:
             data_list_2.data = []
         # Get an object to update
-        id_ = input(f"Enter {data_list_1.data_type} ID you want to update: ")
+        id_ = input(f"➡️  Enter {data_list_1.data_type} ID you want to update: ")
         data_ = data_list_1.get_object(id_)
         print(
             tabulate([data_.__dict__], headers="keys", tablefmt="grid", maxcolwidths=30)
         )
         # Choose property to update
-        property_ = input(" 🔄 Which Property you want to update ?: ").strip()
+        property_ = input(" 🔄  Which Property you want to update ?: ").strip()
         # id the object data_ has attribut property_
         if hasattr(data_, property_):
             # Special handling for task_list updates
             if property_ == "task_list":
-                print(f"list of task : {data_list_2.get_all_ids()}")
+                print(f"📋  list of task : {data_list_2.get_all_ids()}")
                 used_task = [
                     item
                     for sublist in data_list_1.get_all_property_value("task_list")
                     for item in sublist
                 ]
-                print(f"already used_tasks={used_task}")
+                print(f"📋  already used_tasks={used_task}")
                 value = input(
-                    "Enter the new value of task you want to add to this project: "
+                    "➡️  Enter the new value of task you want to add to this project: "
                 ).strip()
                 # Validate task usage in another project
                 if not value in data_.task_list and value in used_task:
@@ -265,7 +270,7 @@ def update_data(data_list_1, data_list_2) -> None:
                     # ask for Removing a task from the project if the task is already in task_list
                     confirm = (
                         input(
-                            f"⚠️ this task is already in task_list ⚠️ you want to delete it ? (yes/no): "
+                            f"⚠️ this task is already in task_list ⚠️ you want to delete it ? (yes/no)❓: "
                         )
                         .strip()
                         .lower()
@@ -278,7 +283,7 @@ def update_data(data_list_1, data_list_2) -> None:
                         save_change(data_list_1)
                         save_change(data_list_2)
                     else:
-                        raise ValueError("🔴 the update has been canceled 🔴")
+                        raise ValueError("🔴  the update has been canceled 🔴")
                 else:
                     # add the task into the task list
                     data_.task_list += [value]
@@ -289,17 +294,17 @@ def update_data(data_list_1, data_list_2) -> None:
             # Special handling for linked_project updates
             elif property_ == "linked_project":
                 raise ValueError(
-                    "🔴 to update the task linked_project go to project and update task_list 🔴"
+                    "🔴  to update the task linked_project go to project and update task_list 🔴"
                 )
             # Update any other properties
             else:
-                value = input("Enter the new value: ").strip()
+                value = input("➡️  Enter the new value: ").strip()
                 setattr(data_, property_, value)
                 save_change(data_list_1)
-            print(f"🟢 The property '{property_}' has been updated successfully! 🟢")
+            print(f"🟢  The property '{property_}' has been updated successfully! 🟢")
         else:
             print(
-                f"🔴 The property '{property_}' does not exist in the {data_list_1.data_type} 🔴"
+                f"🔴  The property '{property_}' does not exist in the {data_list_1.data_type} 🔴"
             )
     except ValueError as e:
         print(e)
@@ -317,14 +322,16 @@ def delete_data(data_list_1, data_list_2) -> None:
     try:
         data_list_1.data_from_csv()
         id_ = input(
-            f"enter the {data_list_1.data_type} ID you want to delete: "
+            f"➡️  enter the {data_list_1.data_type} ID you want to delete: "
         ).strip()
         object_ = data_list_1.get_object(id_)
         data_ = [object_.convert_to_dict()]
         print(tabulate(data_, headers="keys", tablefmt="grid", maxcolwidths=30))
         # Confirm and delete the object
         confirmer = (
-            input(f"Are You sur you want delete this {data_list_1.data_type} (yes/no: ")
+            input(
+                f"⚠️  Are You sur you want delete this {data_list_1.data_type} (yes/no)❓: "
+            )
             .strip()
             .lower()
         )
@@ -355,9 +362,9 @@ def delete_data(data_list_1, data_list_2) -> None:
             except ValueError as e:
                 print(e)
 
-            print(f"🟢 your {data_list_1.data_type} has been deleted successfully 🟢")
+            print(f"🟢  your {data_list_1.data_type} has been deleted successfully 🟢")
         else:
-            print("🔴 the deletion has been canceled 🔴")
+            print("🔴  the deletion has been canceled 🔴")
     except ValueError as e:
         print(e)
 
@@ -412,39 +419,39 @@ def is_valid_deadline(dead_line: str, today: date = date.today()) -> bool:
 
 def get_general_option():
 
-    return """what do you want to do?
-    1. 🎯 Manage your projects.
-    2. ✅ Manage your tasks.
-    3. ❌ Exit()
+    return """\n▶️  what do you want to do❓
+    1️⃣ . 🎯 Manage your projects.
+    2️⃣ . ✅ Manage your tasks.
+    3️⃣ . ❌ Exit()
           """
 
 
 def get_project_option():
-    return """What do you want to do?
-    1. 👁️ Display projects
-    2. 👁️ Display a project with id
-    3. ➕ Add project
-    4. 🔄 Update project
-    5. ➖ Delete project
-    6. 🔙 Back
-    7. ❌ Exit
+    return """\n▶️  What do you want to do❓
+    1️⃣ . 👁️ Display projects
+    2️⃣ . 👁️ Display a project with id
+    3️⃣ . ➕ Add project
+    4️⃣ . 🔄 Update project
+    5️⃣ . ➖ Delete project
+    6️⃣ . 🔙 Back
+    7️⃣ . ❌ Exit
     """
 
 
 def get_task_option():
-    return """What do you want to do?
-    1. 👁️ Display tasks
-    2. 👁️ Display a task with id
-    3. ➕ Add task
-    4. 🔄 Update task
-    5. ➖ Delete task
-    6. 🔙 Back
-    7. ❌ Exit
+    return """\n▶️  What do you want to do❓
+    1️⃣ . 👁️ Display tasks
+    2️⃣ . 👁️ Display a task with id
+    3️⃣ . ➕ Add task
+    4️⃣ . 🔄 Update task
+    5️⃣ . ➖ Delete task
+    6️⃣ . 🔙 Back
+    7️⃣ . ❌ Exit
     """
 
 
 def invalid_option() -> str:
-    return "⚠️ Invalid option. Please try again. ⚠️"
+    return "⚠️  Invalid option. Please try again. ⚠️"
 
 
 if __name__ == "__main__":

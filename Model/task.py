@@ -45,9 +45,9 @@ class Task(DataType):
             )
             if answer in ["yes", "y"]:
                 self.linked_project = data["linked_project"]
-                print(f"🟢 your linked_project has been updated  successfully 🟢")
+                print(f"🟢  your linked_project has been updated  successfully 🟢")
             else:
-                raise ValueError("🔴 the update was canceled 🔴")
+                raise ValueError("🔴  the update was canceled 🔴")
 
         else:
             if "linked_project" in data:

@@ -53,11 +53,11 @@ class Data:
                 return data
             else:
                 raise ValueError(
-                    f"⚠️ the file for your {self.data_type}s is empty. Choose option 3 to add some ⚠️"
+                    f"⚠️  the file for your {self.data_type}s is empty. Choose option 3 to add some ⚠️"
                 )
         else:
             raise ValueError(
-                f"⚠️ the file for your {self.data_type}s does not exist. Choose option 3 to add some ⚠️"
+                f"⚠️  the file for your {self.data_type}s does not exist. Choose option 3 to add some ⚠️"
             )
 
     def data_to_csv(
@@ -79,7 +79,7 @@ class Data:
                 for row in self.data:
                     writer.writerow(row)
             else:
-                raise ValueError(f"⚠️ they are no data now in your {self.data_type} ⚠️")
+                raise ValueError(f"⚠️  they are no data now in your {self.data_type} ⚠️")
 
     def get_all_ids(self) -> list:
         """
@@ -103,7 +103,7 @@ class Data:
         for object_ in self.objects:
             if object_.id == id_:
                 return object_
-        raise ValueError(f"⚠️ No {self.data_type} with this ID ⚠️")
+        raise ValueError(f"⚠️  No {self.data_type} with this ID ⚠️")
 
     def get_object_by_property_value(self, property_, value) -> DataType:
         """
@@ -120,7 +120,7 @@ class Data:
             if hasattr(object_, property_):
                 if value in getattr(object_, property_):
                     return object_
-        raise ValueError(f"⚠️ No {self.data_type} with {property_} = {value}⚠️")
+        raise ValueError(f"⚠️  No {self.data_type} with {property_} = {value}⚠️")
 
     def delete_object(self, object_) -> None:
         """
