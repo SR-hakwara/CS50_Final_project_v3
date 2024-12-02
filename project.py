@@ -6,8 +6,10 @@ import re
 
 # this file was reformated by black module
 
-S="\033[1m" #start bold
-E="\033[0m" #end bold
+S = "\033[1m"  # start bold
+E = "\033[0m"  # end bold
+
+
 def main() -> None:
     """
     - Main application loop providing a menu-driven interface for managing projects and tasks.
@@ -18,7 +20,7 @@ def main() -> None:
     """
     try:  # catch CTRL+D and print an exit message
         print(
-            f"""\n\033[92m★★★{E} {S} Welcome to CS50 Poject{E} \033[92m★★★{E}
+            f"""\n\033[92m★★★{E} {S} Welcome to CS50 Project{E} \033[92m★★★{E}
 \033[92m▶▶{E} {S} Project and Tasks Management{E} \033[92m◀◀{E}"""
         )
         while True:
@@ -146,7 +148,7 @@ def view_single_data(data_list):
 
     try:
         data_list.data_from_csv()
-        id_ = input(f"➡️  Enter the {data_list.data_type} id you want to view: ")
+        id_ = input(f"➡️  Enter the {data_list.data_type} id you want to view: ").strip()
         object_ = data_list.get_object(id_)
         data_ = [object_.__dict__]
         single_data = tabulate(data_, headers="keys", tablefmt="grid", maxcolwidths=30)
@@ -203,7 +205,7 @@ def add_data(data_list) -> None:
     # Validate deadline with maximum 3 attempts
     compter = 0
     while compter < 3:
-        dead_line = input("➡️  Enter dead line (YYYY-MM-DD ie:2024-12-31): ")
+        dead_line = input("➡️  Enter dead line (YYYY-MM-DD ie:2024-12-31): ").strip()
         if is_valid_deadline(dead_line):
             data_input["dead_line"] = dead_line
             break
@@ -242,13 +244,16 @@ def update_data(data_list_1, data_list_2) -> None:
         except ValueError:
             data_list_2.data = []
         # Get an object to update
-        id_ = input(f"➡️  Enter {data_list_1.data_type} ID you want to update: ")
+        id_ = input(f"➡️  Enter {data_list_1.data_type} ID you want to update: ").strip()
         data_ = data_list_1.get_object(id_)
         print(
             tabulate([data_.__dict__], headers="keys", tablefmt="grid", maxcolwidths=30)
         )
         # Choose property to update
-        property_ = input(" 🔄  Which Property you want to update ?: ").strip()
+        property_o = input(" 🔄  Which Property you want to update ?: ").strip().lower()
+        property_ = ""
+        if property_o.find(" "):
+            property_ = property_o.replace(" ", "_")
         # id the object data_ has attribut property_
         if hasattr(data_, property_):
             # Special handling for task_list updates
@@ -296,6 +301,8 @@ def update_data(data_list_1, data_list_2) -> None:
                 raise ValueError(
                     "🔴  to update the task linked_project go to project and update task_list 🔴"
                 )
+            elif property_ == "id":
+                raise ValueError("🔴  You can modify the id 🔴")
             # Update any other properties
             else:
                 value = input("➡️  Enter the new value: ").strip()
