@@ -124,10 +124,7 @@ For instance, deleting a task automatically removes it from the task_list of the
 
 ---
 
-I'll format this for Markdown (.md) to ensure it's displayed correctly:
-
-
-# CS50 Project Management System
+## Usage Example
 
 ### Run the application 
 ```
@@ -156,7 +153,7 @@ I'll format this for Markdown (.md) to ensure it's displayed correctly:
     6️⃣ . 🔙 Back
     7️⃣ . ❌ Exit
 ```
-### View all projects
+#### 1. View all projects
 
 ```
 🔵 Choose an option: 1
@@ -171,7 +168,7 @@ I'll format this for Markdown (.md) to ensure it's displayed correctly:
 +------+--------------+-------------------+-----------------+-------------+---------+-------------+
 Press Enter to continue ➡️  ...
 ```
-### view a single project
+#### 2. view a single project
 ```
 🔵 Choose an option: 2
 ➡️  Enter the project id you want to view: 1

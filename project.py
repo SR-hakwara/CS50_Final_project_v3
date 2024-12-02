@@ -250,69 +250,93 @@ def update_data(data_list_1, data_list_2) -> None:
             tabulate([data_.__dict__], headers="keys", tablefmt="grid", maxcolwidths=30)
         )
         # Choose property to update
-        property_o = input(" 🔄  Which Property you want to update ?: ").strip().lower()
-        property_ = ""
-        if property_o.find(" "):
-            property_ = property_o.replace(" ", "_")
-        # id the object data_ has attribut property_
-        if hasattr(data_, property_):
-            # Special handling for task_list updates
-            if property_ == "task_list":
-                print(f"📋  list of task : {data_list_2.get_all_ids()}")
-                used_task = [
-                    item
-                    for sublist in data_list_1.get_all_property_value("task_list")
-                    for item in sublist
-                ]
-                print(f"📋  already used_tasks={used_task}")
-                value = input(
-                    "➡️  Enter the new value of task you want to add to this project: "
-                ).strip()
-                # Validate task usage in another project
-                if not value in data_.task_list and value in used_task:
-                    raise ValueError(f"⚠️ this task is already used in other project ⚠️")
-                if value in data_.task_list:
-                    # ask for Removing a task from the project if the task is already in task_list
-                    confirm = (
-                        input(
-                            f"⚠️ this task is already in task_list ⚠️ you want to delete it ? (yes/no)❓: "
-                        )
-                        .strip()
-                        .lower()
-                    )
-                    if confirm in ["yes", "y"]:
-                        # remove the task from the project task list
-                        data_.task_list.remove(value)
-                        # delete project id from linked_project for the task removed
-                        data_list_2.get_object(value).linked_project = ""
-                        save_change(data_list_1)
-                        save_change(data_list_2)
-                    else:
-                        raise ValueError("🔴  the update has been canceled 🔴")
-                else:
-                    # add the task into the task list
-                    data_.task_list += [value]
-                    # add the project id to the task linked project
-                    data_list_2.get_object(value).linked_project = id_
-                    save_change(data_list_1)
-                    save_change(data_list_2)
-            # Special handling for linked_project updates
-            elif property_ == "linked_project":
-                raise ValueError(
-                    "🔴  to update the task linked_project go to project and update task_list 🔴"
-                )
-            elif property_ == "id":
-                raise ValueError("🔴  You can modify the id 🔴")
-            # Update any other properties
-            else:
-                value = input("➡️  Enter the new value: ").strip()
-                setattr(data_, property_, value)
-                save_change(data_list_1)
-            print(f"🟢  The property '{property_}' has been updated successfully! 🟢")
-        else:
-            print(
-                f"🔴  The property '{property_}' does not exist in the {data_list_1.data_type} 🔴"
+        compteur = 0
+        while compteur < 3:
+            property_o = (
+                input("🔄  Which Property you want to update ?: ").strip().lower()
             )
+            property_ = ""
+            if property_o.find(" "):
+                property_ = property_o.replace(" ", "_")
+            # id the object data_ has attribut property_
+            if hasattr(data_, property_):
+                # Special handling for task_list updates
+                if property_ == "task_list":
+                    compteur_err_task = 0
+                    all_task_ids = data_list_2.get_all_ids()
+                    while compteur_err_task < 3:
+                        print(f"📋  List of task : {all_task_ids}")
+                        used_task = [
+                            item
+                            for sublist in data_list_1.get_all_property_value(
+                                "task_list"
+                            )
+                            for item in sublist
+                        ]
+                        print(f"📋  Already used_tasks={used_task}")
+                        value = input(
+                            "➡️  Enter the new value of task you want to add to this project: "
+                        ).strip()
+                        # Validate task usage in another project
+                        if not value in data_.task_list and value in used_task:
+                            print(f"⚠️ This task is already used in other project ⚠️")
+                            compteur_err_task += 1
+                        elif value in data_.task_list:
+                            # ask for Removing a task from the project if the task is already in task_list
+                            confirm = (
+                                input(
+                                    f"⚠️ This task is already in task_list ⚠️ you want to delete it ? (yes/no)❓: "
+                                )
+                                .strip()
+                                .lower()
+                            )
+                            if confirm in ["yes", "y"]:
+                                # remove the task from the project task list
+                                data_.task_list.remove(value)
+                                # delete project id from linked_project for the task removed
+                                data_list_2.get_object(value).linked_project = ""
+                                save_change(data_list_1)
+                                save_change(data_list_2)
+                                break
+                            else:
+                                raise ValueError("🔴  The update has been canceled 🔴")
+                        elif not value.isnumeric() or not int(value) in all_task_ids:
+                            print(f"⚠️  No task with this ID ⚠️")
+                            compteur_err_task += 1
+                        else:
+                            # add the task into the task list
+                            data_.task_list += [value]
+                            # add the project id to the task linked project
+                            data_list_2.get_object(value).linked_project = id_
+                            save_change(data_list_1)
+                            save_change(data_list_2)
+                            break
+                    if compteur_err_task == 3:
+                        print("⚠️ 3 wrong attempt start again ⚠️")
+                        break
+                # Special handling for linked_project updates
+                elif property_ == "linked_project":
+                    raise ValueError(
+                        "🔴  To update the task linked_project go to project and update task_list 🔴"
+                    )
+                elif property_ == "id":
+                    raise ValueError("🔴  You can't modify the id 🔴")
+                # Update any other properties
+                else:
+                    value = input("➡️  Enter the new value: ").strip()
+                    setattr(data_, property_, value)
+                    save_change(data_list_1)
+                print(
+                    f"🟢  The property '{property_}' has been updated successfully! 🟢"
+                )
+                break
+            else:
+                compteur += 1
+                print(
+                    f"🔴  The property '{property_}' does not exist in the {data_list_1.data_type} 🔴"
+                )
+        if compteur == 3:
+            print("⚠️ 3 wrong attempt start again ⚠️")
     except ValueError as e:
         print(e)
 
@@ -329,7 +353,7 @@ def delete_data(data_list_1, data_list_2) -> None:
     try:
         data_list_1.data_from_csv()
         id_ = input(
-            f"➡️  enter the {data_list_1.data_type} ID you want to delete: "
+            f"➡️  Enter the {data_list_1.data_type} ID you want to delete: "
         ).strip()
         object_ = data_list_1.get_object(id_)
         data_ = [object_.convert_to_dict()]
@@ -369,9 +393,9 @@ def delete_data(data_list_1, data_list_2) -> None:
             except ValueError as e:
                 print(e)
 
-            print(f"🟢  your {data_list_1.data_type} has been deleted successfully 🟢")
+            print(f"🟢  Your {data_list_1.data_type} has been deleted successfully 🟢")
         else:
-            print("🔴  the deletion has been canceled 🔴")
+            print("🔴  The deletion has been canceled 🔴")
     except ValueError as e:
         print(e)
 
@@ -427,9 +451,9 @@ def is_valid_deadline(dead_line: str, today: date = date.today()) -> bool:
 def get_general_option():
 
     return """\n▶️  what do you want to do❓
-    1️⃣ . 🎯 Manage your projects.
-    2️⃣ . ✅ Manage your tasks.
-    3️⃣ . ❌ Exit()
+    1️⃣ . 🎯  Manage your projects.
+    2️⃣ . ✅  Manage your tasks.
+    3️⃣ . ❌  Exit()
           """
 
 

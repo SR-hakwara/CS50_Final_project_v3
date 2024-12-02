@@ -1,3 +1,6 @@
 id,name,description,detailed_description,creation_date,dead_line,state,linked_project
 1,tash test,short description,longer detailed task description,2024-12-01,2025-01-01,To do,1
 2,task 2,task2 shrt desc,task2 longer desc,2024-12-01,2025-02-02,To do,3
+3,task 3,shrt desc,3 longer desc,2024-12-01,2025-12-31,To do,5
+4,task 4,shrt desc,4 longer desc,2024-12-01,2025-01-01,To do,
+5,task 5,shrt desc,5 longer desc,2024-12-01,2025-03-02,To do,

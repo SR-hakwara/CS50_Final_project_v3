@@ -132,7 +132,7 @@ def test_project_delete(monkeypatch):
     # Verify deletion. The project file must be empty, and trying to import data from it raises ValueError
     with pytest.raises(
         ValueError,
-        match="⚠️ the file for your projects is empty. Choose option 3 to add some ⚠️",
+        match="⚠️  The file for your projects is empty. Choose option 3 to add some ⚠️",
     ):
         project_list.data_from_csv()
     assert len(project_list.data) == 0
@@ -248,25 +248,25 @@ def test_file_exist(capsys):
     view_all(project_list)
     captured = capsys.readouterr()
     assert (
-        "⚠️ the file for your projects does not exist. Choose option 3 to add some ⚠️"
+        "⚠️  The file for your projects does not exist. Choose option 3 to add some ⚠️"
         in captured.out
     )
     view_single_data(project_list)
     captured = capsys.readouterr()
     assert (
-        "⚠️ the file for your projects does not exist. Choose option 3 to add some ⚠️"
+        "⚠️  The file for your projects does not exist. Choose option 3 to add some ⚠️"
         in captured.out
     )
     update_data(project_list, task_list)
     captured = capsys.readouterr()
     assert (
-        "⚠️ the file for your projects does not exist. Choose option 3 to add some ⚠️"
+        "⚠️  The file for your projects does not exist. Choose option 3 to add some ⚠️"
         in captured.out
     )
     delete_data(project_list, task_list)
     captured = capsys.readouterr()
     assert (
-        "⚠️ the file for your projects does not exist. Choose option 3 to add some ⚠️"
+        "⚠️  The file for your projects does not exist. Choose option 3 to add some ⚠️"
         in captured.out
     )
 
@@ -286,25 +286,25 @@ def test_file_empty(capsys):
     view_all(project_list)
     captured = capsys.readouterr()
     assert (
-        "⚠️ the file for your projects is empty. Choose option 3 to add some ⚠️"
+        "⚠️  The file for your projects is empty. Choose option 3 to add some ⚠️"
         in captured.out
     )
     view_single_data(project_list)
     captured = capsys.readouterr()
     assert (
-        "⚠️ the file for your projects is empty. Choose option 3 to add some ⚠️"
+        "⚠️  The file for your projects is empty. Choose option 3 to add some ⚠️"
         in captured.out
     )
     update_data(project_list, task_list)
     captured = capsys.readouterr()
     assert (
-        "⚠️ the file for your projects is empty. Choose option 3 to add some ⚠️"
+        "⚠️  The file for your projects is empty. Choose option 3 to add some ⚠️"
         in captured.out
     )
     delete_data(project_list, task_list)
     captured = capsys.readouterr()
     assert (
-        "⚠️ the file for your projects is empty. Choose option 3 to add some ⚠️"
+        "⚠️  The file for your projects is empty. Choose option 3 to add some ⚠️"
         in captured.out
     )
 

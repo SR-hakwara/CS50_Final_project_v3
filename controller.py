@@ -53,11 +53,11 @@ class Data:
                 return data
             else:
                 raise ValueError(
-                    f"⚠️  the file for your {self.data_type}s is empty. Choose option 3 to add some ⚠️"
+                    f"⚠️  The file for your {self.data_type}s is empty. Choose option 3 to add some ⚠️"
                 )
         else:
             raise ValueError(
-                f"⚠️  the file for your {self.data_type}s does not exist. Choose option 3 to add some ⚠️"
+                f"⚠️  The file for your {self.data_type}s does not exist. Choose option 3 to add some ⚠️"
             )
 
     def data_to_csv(
@@ -79,7 +79,7 @@ class Data:
                 for row in self.data:
                     writer.writerow(row)
             else:
-                raise ValueError(f"⚠️  they are no data now in your {self.data_type} ⚠️")
+                raise ValueError(f"⚠️  They are no data now in your {self.data_type} ⚠️")
 
     def get_all_ids(self) -> list:
         """
