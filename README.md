@@ -4,11 +4,43 @@
 ## Overview
 This CLI (Command Line Interface) application for project and task management is a simple tool developed in Python.
 It allows users to easily manage projects and tasks through a series of basic features,
-such as creating, viewing, updating, and deleting projects and tasks.
+such as creating, viewing, updating, and deleting projects and tasks (CRUD).
 All data is saved in CSV files for easy management and data persistence.
 Additionally, modifications to a project or task are reflected in their linked entities.
 For instance, deleting a task automatically removes it from the task_list of the associated project,
 ensuring that all relationships remain consistent and up to date.
+
+## File Structure
+- `project.py`: Main application script managing view and containing some core functionality, and data validation.
+- `controller.py`: Controlling data transfert between the view the database (csv files) and model files.
+- `test_project`: File for testing the core functionality
+- `README.md`: This file.
+- `.requirement.txt`: the module and library used in the project.
+- `./BD/projects.csv`: CSV file storing project information
+- `./BD/tasks.csv`: CSV file storing task information
+- `./Model/__init__.py`: to declare the folder as a package and import all model
+- `./Model/data_type.py`: Defines a base class with shared attributes and methods for all models.
+- `./Model/project_.py`: Represents the project model, inheriting from data_type.
+- `./Model/task.py`: Represents the task model, inheriting from data_type.
+
+## Design Choices and Justifications
+
+This project uses CSV files to store data because they're straightforward to use, portable, and easy to edit.
+While databases could handle larger systems, they were unnecessary for the size of this project.
+SQLite3, which is integrated into Python, could also be used.
+It would offer advantages such as better performance with large datasets, more advanced querying capabilities,
+and built-in data integrity checks.
+
+The program follows a structure inspired by MVC (Model-View-Controller).
+The controller retrieves data from CSV files and converts it into objects using models.
+The main file acts as the interface, where users interact with the system.
+It also validates inputs before sending them to the controller.
+
+A base class, data_type, was created to avoid duplicating common features like converting objects into dictionaries.
+This keeps the code clean and reusable.
+
+Finally, error handling and validation ensure that users can't input incorrect data, like deadlines in the past.
+This improves the user experience and prevents issues during operation.
 
 ## Libraries Used
 - `black` formating all files.
@@ -20,36 +52,6 @@ ensuring that all relationships remain consistent and up to date.
 - `datetime` for date handling
 - `re` (regular expressions) for date validation (deadline)
 - `literal_eval` from `ast` to safely convert the string representation of a list to an actual list (eval() is more risky)
-
-## File Structure
-- `project.py`: Main application script managing view and containing some core functionality
-- `controller.py`: Controlling data transfert between the view the database (csv files) and model files.
-- `test_project`: File for testing the core functionality
-- `README.md`: This file.
-- `.requirement.txt`: the module and library used in the project.
-- `./BD/projects.csv`: CSV file storing project information
-- `./BD/tasks.csv`: CSV file storing task information
-- `./Model/__init__.py`: to declare the folder as a package and import all model
-- `./Model/data_tpe.py`: Defines a base class with shared attributes and methods for all models.
-- `./Model/project_.py`: Represents the project model, inheriting from data_type.
-- `./Model/task.py`: Represents the task model, inheriting from data_type.
-
-## Design Choices and Justifications
-
-For this project, CSV files were chosen for data storage because they're simple, portable, and easy to edit.
-Using a database was an option, but it felt unnecessary for this scale.
-
-The project uses a structure inspired by MVC.
-Models handle data, controllers manage logic, and the main interface connects everything.
-A base class, data_type, was created to avoid repeating common code for projects and tasks.
-
-Some control logic is kept in project.py to meet the CS50 project's requirements for testability.
-" 3 required custom functions other than main must also be in project.py ".
-
-Validation and error handling were added to avoid invalid inputs, like deadlines in the past.
-Clear messages help users fix mistakes easily.
-
-These decisions were made to keep the project simple, functional, and user-friendly.
 
 ## Fonctionnalités principales
 
@@ -302,10 +304,55 @@ Choose an option: 3  # Exit from main menu
 
 ```
 ### Error message
-#### deadline error
+#### Deadline error
+Deadline must be in the future and in the format YYYY-MM-DD.
 ```
 ➡️  Enter deadline (YYYY-MM-DD ie:2024-12-31): 2024-12-03  # Eralier date than today
 ⚠️ Deadline must be today or later, and in the format (YYYY-MM-DD, e.g., 2025-01-30) ⚠️
 ➡️  Enter deadline (YYYY-MM-DD ie:2024-12-31): 2025-31-12  # Wrong format YYYY-DD-MM
 ⚠️ Deadline must be today or later, and in the format (YYYY-MM-DD, e.g., 2025-01-30) ⚠️
 ```
+#### File error
+```
+🔵 Choose an option: 1
+⚠️  The file for your projects does not exist. Choose option 3 to add some ⚠️
+```
+```
+🔵 Choose an option: 1
+⚠️  The file for your projects is empty. Choose option 3 to add some ⚠️
+```
+#### Task_list update error
+We can only choose a task ID in a list of available task
+```
+🔄  Which Property you want to update ?: task lists
+🔴  The property 'task_lists' does not exist in the project 🔴
+🔄  Which Property you want to update ?: task list
+📋  list of available task : ['3: Backend Integration', '4: App Wireframes']
+➡️  Enter the ID of the task you want to add to this project: 1
+⚠️ This task is already used in other project ⚠️
+📋  list of available task : ['3: Backend Integration', '4: App Wireframes']
+➡️  Enter the ID of the task you want to add to this project: 7
+⚠️  No task with this ID ⚠️
+📋  list of available task : ['3: Backend Integration', '4: App Wireframes']
+➡️  Enter the ID of the task you want to add to this project: 3
+🟢  The property 'task_list' has been updated successfully! 🟢
+```
+#### Three wrong attempts
+we have three attempts if we enter the wrong data for deadline, task_list and linked_project properties.
+```
+⚠️ 3 wrong attempt start again ⚠️
+```
+
+## Conclusion
+
+This project represents a practical and functional application for managing projects and tasks.
+By combining Python's object-oriented programming with an MVC-inspired structure,
+the program achieves a balance between simplicity and extensibility. 
+
+The use of CSV files for data persistence makes the system lightweight and accessible,
+while robust validation and error-handling ensure data integrity.
+The application's modular design also lays the foundation for future improvements,
+such as integrating a database or transitioning to a graphical interface.
+
+Thank you for exploring this project,
+which demonstrates the core principles of software development and highlights key aspects of the CS50 course. 

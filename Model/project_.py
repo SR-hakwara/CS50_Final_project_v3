@@ -1,5 +1,5 @@
 from .data_type import DataType  # Import parent class DataType
-import ast  # Import ast to convert a string to a list
+from ast import literal_eval # Import ast to convert a string to a list
 
 # this file was reformated by black module
 
@@ -51,4 +51,4 @@ class Project(DataType):
             )
         else:
             # Use ast.literal_eval to safely convert the string representation of a list to an actual list
-            self.task_list += ast.literal_eval(data["task_list"])
+            self.task_list += literal_eval(data["task_list"])

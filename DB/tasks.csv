@@ -1,7 +1,7 @@
 id,name,description,detailed_description,creation_date,deadline,state,linked_project
-1,Create Wireframes,Design wireframes for the website redesign,Sketch basic layouts for all major pages,2024-12-02,2024-12-15,Completed,1
+1,Create Wireframes,Design wireframes for the website redesign,Sketch basic layouts for all major pages,2024-12-02,2024-12-15,Completed,
 2,Develop Frontend,Implement frontend for the website,Use React.js to build a responsive UI,2024-12-05,2025-01-10,In Progress,1
-3,Backend Integration,Connect the backend to the frontend,Develop APIs and integrate them into the frontend,2024-12-08,2025-01-15,To do,
+3,Backend Integration,Connect the backend to the frontend,Develop APIs and integrate them into the frontend,2024-12-08,2025-01-15,To do,4
 4,App Wireframes,Design wireframes for the mobile app,Create a blueprint for app navigation and features,2024-12-03,2024-12-20,In Progress,
 5,Build App Backend,Develop backend APIs for the mobile app,Use Node.js and Express.js for the API development,2024-12-10,2025-02-20,To do,2
-6,Create Marketing Assets,Develop marketing materials for the campaign,Prepare graphics and copy for online ads,2024-12-05,2025-02-15,To do,3
+6,Create Marketing Assets,Develop marketing materials for the campaign,Prepare graphics and copy for online ads,2024-12-05,2025-02-15,To do,

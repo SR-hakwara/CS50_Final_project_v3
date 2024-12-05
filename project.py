@@ -311,8 +311,8 @@ def update_data(data_list_1, data_list_2) -> None:
                         for sublist in data_list_1.get_all_property_value("task_list")
                         for item in sublist
                     ]
-                    used_task = [int(task) for task in used_task]
-                    available_task_id = list(set(all_task_ids) - set(used_task))
+                    used_task_int = [int(task) for task in used_task]
+                    available_task_id = list(set(all_task_ids) - set(used_task_int))
                     available_task = []
                     for id_task in available_task_id:
                         available_task.append(

@@ -9,7 +9,7 @@ class DataType:
         description (str): Short description or summary of the object
         detailed_description (str): Detailed description of the object
         creation_date (str): Creation date of the data type (expected format: string)
-        dead_line (str): Deadline associated with the data type (expected format: string)
+        deadline (str): Deadline associated with the data type (expected format: string)
         state (str): State or status of the data type.
     """
 
@@ -19,7 +19,7 @@ class DataType:
         self.description = ""
         self.detailed_description = ""
         self.creation_date = ""
-        self.dead_line = ""
+        self.deadline = ""
         self.state = ""
 
     def convert_to_dict(self) -> dict:
@@ -34,7 +34,7 @@ class DataType:
             "description": self.description,
             "detailed_description": self.detailed_description,
             "creation_date": self.creation_date,
-            "dead_line": self.dead_line,
+            "deadline": self.deadline,
             "state": self.state,
         }
         return data
@@ -51,5 +51,5 @@ class DataType:
         self.description = data["description"]
         self.detailed_description = data["detailed_description"]
         self.creation_date = data["creation_date"]
-        self.dead_line = data["dead_line"]
+        self.deadline = data["deadline"]
         self.state = data["state"]

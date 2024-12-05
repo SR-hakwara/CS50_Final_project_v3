@@ -63,7 +63,7 @@ def test_project_add(monkeypatch):
     assert added_project["name"] == "Test Project"
     assert added_project["description"] == "A test project description"
     assert added_project["state"] == "To do"
-    assert added_project["dead_line"] == "2025-12-31"
+    assert added_project["deadline"] == "2025-12-31"
     clean_csv_files()
 
 
@@ -154,7 +154,7 @@ def test_view_all():
             "description": "First test project",
             "detailed_description": "Detailed description of first project",
             "creation_date": date.today(),
-            "dead_line": "2025-12-31",
+            "deadline": "2025-12-31",
             "state": "To do",
             "task_list": [],
         },
@@ -164,7 +164,7 @@ def test_view_all():
             "description": "Second test project",
             "detailed_description": "Detailed description of second project",
             "creation_date": date.today(),
-            "dead_line": "2026-01-15",
+            "deadline": "2026-01-15",
             "state": "To do",
             "task_list": [],
         },
@@ -208,7 +208,7 @@ def test_view_single_project(monkeypatch):
             "description": "A test project",
             "detailed_description": "Detailed description of test project",
             "creation_date": date.today(),
-            "dead_line": "2025-12-31",
+            "deadline": "2025-12-31",
             "state": "To do",
             "task_list": [],
         }
@@ -311,7 +311,7 @@ def test_file_empty(capsys):
     clean_csv_files()
 
 
-def test_is_valid_dead_line(monkeypatch, capsys):
+def test_is_valid_deadline(monkeypatch, capsys):
     # Simulate user inputs for project details
     inputs = [
         "Test Project",  # name
@@ -327,6 +327,7 @@ def test_is_valid_dead_line(monkeypatch, capsys):
 
     # Create Projects instance
     project_list = Projects(PROJECT_CSV)
+    task_list = Tasks(TASK_CSV)
 
     # Add a project
 
@@ -341,3 +342,39 @@ def test_is_valid_dead_line(monkeypatch, capsys):
         in captured.out
     )
     assert "⚠️ 3 wrong attempt start again ⚠️" in captured.out
+
+    #add a valid project deadline
+    inputs = [
+        "Test Project",  # name
+        "A test project description",  # description
+        "Detailed test project description",  # detailed description
+        f"{date.today() + timedelta(days=1)}",  # not a valid deadline less than to day date
+    ]
+
+    # Simulate inputs
+    simulate_input(monkeypatch, inputs)
+    add_data(project_list)
+    #data for testing the update project function (invalid deadline)
+    inputs = [
+        "1",  # project id to update
+        "deadline",  # property to update
+        f"{date.today() - timedelta(days=1)}",  # not a valid deadline less than to day date
+        "2025-1-12",  # not a valid deadline not in YYYY-MM-DD format
+        "2025-31-12",  # not a valid deadline in YYYY-DD-MM format
+    ]
+
+
+    # Simulate inputs
+    simulate_input(monkeypatch, inputs)
+
+    # Update a project
+    update_data(project_list, task_list)
+    captured = capsys.readouterr()
+    assert (
+            "⚠️ Deadline must be today or later, and in the format (YYYY-MM-DD, e.g., 2025-01-30) ⚠️"
+            in captured.out
+    )
+    assert "⚠️ 3 wrong attempt start again ⚠️" in captured.out
+
+
+    clean_csv_files()
