@@ -1,4 +1,5 @@
-id,name,description,detailed_description,creation_date,dead_line,state,task_list
-1,project test,short description,longer detailed description,2024-12-01,,To do,['1']
-5,p2,sd,ld,2024-12-01,2025-01-01,To do,['3']
-3,p3,p3 desc,p3 longer desc,2024-12-01,2025-01-01,To do,['2']
+id,name,description,detailed_description,creation_date,deadline,state,task_list
+1,Website Redesign,Redesign the company website,Complete overhaul of the UI/UX design for the company website,2024-12-01,2025-01-15,In Progress,"['1', '2']"
+2,Mobile App Development,Develop a mobile application for internal use,Build an app to streamline employee workflows,2024-12-01,2025-02-28,To do,['5']
+3,Marketing Campaign,Plan a marketing campaign for Q1 2025,Create and execute a comprehensive marketing strategy,2024-12-01,2025-03-01,To do,"['6', '6']"
+4,project test,p,p,2024-12-05,2024-12-12,To do,[]

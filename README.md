@@ -3,188 +3,309 @@
 #### Description: An application for project and task management, which uses the command line to interact with the user
 ## Overview
 This CLI (Command Line Interface) application for project and task management is a simple tool developed in Python.
-It allows users to easily manage projects and tasks through a series of basic features, such as creating, viewing, updating, and deleting projects and tasks.
-All data is saved in CSV files for easy management and data persistence. Additionally, modifications to a project or task are reflected in their linked entities.
-For instance, deleting a task automatically removes it from the task_list of the associated project, ensuring that all relationships remain consistent and up-to-date.
+It allows users to easily manage projects and tasks through a series of basic features,
+such as creating, viewing, updating, and deleting projects and tasks.
+All data is saved in CSV files for easy management and data persistence.
+Additionally, modifications to a project or task are reflected in their linked entities.
+For instance, deleting a task automatically removes it from the task_list of the associated project,
+ensuring that all relationships remain consistent and up to date.
 
----
-## Functionalities and Features
-### Core Features
+## Libraries Used
+- `black` formating all files.
+- `mypy` typing hint
+- `pytest` for testing.
+- `os` to check file state (exist, empty)
+- `csv` module for manipulation of csv files for data storage
+- `tabulate` library for formatted table display
+- `datetime` for date handling
+- `re` (regular expressions) for date validation (deadline)
+- `literal_eval` from `ast` to safely convert the string representation of a list to an actual list (eval() is more risky)
 
-#### Modular Architecture
-- Organized into three layers:
-  - **Models**: Handles data representation and manipulation.
-  - **Controllers**: Manages interactions between the user interface and the model layer.
-  - **Interface**: The `project.py` file provides a user-friendly, menu-driven interface.
-- Ensures a clear separation of concerns, enhancing scalability and maintainability.
+## File Structure
+- `project.py`: Main application script managing view and containing some core functionality
+- `controller.py`: Controlling data transfert between the view the database (csv files) and model files.
+- `test_project`: File for testing the core functionality
+- `README.md`: This file.
+- `.requirement.txt`: the module and library used in the project.
+- `./BD/projects.csv`: CSV file storing project information
+- `./BD/tasks.csv`: CSV file storing task information
+- `./Model/__init__.py`: to declare the folder as a package and import all model
+- `./Model/data_tpe.py`: Defines a base class with shared attributes and methods for all models.
+- `./Model/project_.py`: Represents the project model, inheriting from data_type.
+- `./Model/task.py`: Represents the task model, inheriting from data_type.
 
-#### Robust Error Handling
-- Validates input formats for dates (`YYYY-MM-DD`) and IDs.
-- Prevents inconsistencies, such as duplicate task assignments or invalid updates.
-- Provides detailed feedback and error messages for invalid inputs or operations.
+## Design Choices and Justifications
 
-#### User-Friendly Interface
-- Menu-driven navigation ensures accessibility for both technical and non-technical users.
-- Logical flow and clear instructions guide users through operations.
+For this project, CSV files were chosen for data storage because they're simple, portable, and easy to edit.
+Using a database was an option, but it felt unnecessary for this scale.
 
----
-### Key Functionalities
+The project uses a structure inspired by MVC.
+Models handle data, controllers manage logic, and the main interface connects everything.
+A base class, data_type, was created to avoid repeating common code for projects and tasks.
 
-#### Selection Menu
-- **Manage Projects**: Access all features related to project management.
-- **Manage Tasks**: Navigate and control all task-related operations.
-- **Quit**: Exit the application gracefully.
+Some control logic is kept in project.py to meet the CS50 project's requirements for testability.
+" 3 required custom functions other than main must also be in project.py ".
 
-#### Project Management
-- **Show All Projects**:
-  - Displays all projects in a tabular format, excluding the long description property.
-- **View Project Details**:
-  - Displays detailed information about a project, including the long description property and all linked tasks (if any).
-- **Add a New Project**:
-  - Automatically generates a unique ID for the project. Deleted project IDs are reused for new creations.
-  - Includes fields for name, descriptions, and a deadline, which must follow the `YYYY-MM-DD` format and can't be in the past.
-- **Update a Project**:
-  - Allows updates to any property except the ID.
-  - For the `task_list` property:
-    - Only existing task IDs can be added.
-    - If a task is added, the task's `linked_project` property is automatically updated.
-    - If a task already in the list is re-selected, it is removed after user confirmation.
-- **Delete a Project**:
-  - Removes the project and clears the `linked_project` property of any associated tasks.
-- **Return to Menu or Quit**:
-  - Navigate back to the main menu or exit the application.
+Validation and error handling were added to avoid invalid inputs, like deadlines in the past.
+Clear messages help users fix mistakes easily.
 
-#### Task Management
-- **Show All Tasks**:
-  - Displays all tasks in a tabular format, excluding the long description.
-- **View Task Details**:
-  - Shows full details of a task, including the long description and linked project (if any).
-- **Add a New Task**:
-  - Automatically generates a unique ID for the task. Deleted task IDs are reused for new creations.
-- **Update a Task**:
-  - Allows modification of task properties except the ID and linked_project
-- **Delete a Task**:
-  - Removes the task and, if linked to a project, updates the project to reflect the removal.
-- **Return to Menu or Quit**:
-  - Navigate back to the main menu or exit the application.
+These decisions were made to keep the project simple, functional, and user-friendly.
 
----
-### Files Overview:
-#### **Primary Files**
-- **`project.py`**:
-  - The main application interface containing high-level control logic and menu navigation.
-  - Serves as the entry point for users and integrates models and controllers.
+## Fonctionnalités principales
 
-- **`README.md`**:
-  - Documentation file describing the project's purpose, architecture, and functionality.
+**selection what we want to manage**
+- Manage projects
+- Manage tasks
+- quit
 
-- **`test_project.py`**:
-  - Contains test cases for validating the functionality of the system. Ensures robustness and reliability.
+**Project Management**
+- Show all projects (the long description property is not displayed). 
+- Show the details of a project using its ID (the detailed description property is displayed).
+  - display any tasks linked to the project.
+- Add a new project:
+  - The ID is generated automatically. If a project is deleted, its ID is reused for the next project creation.
+- Update a project:
+  - for the "task_list" only a task ID already existing on the task file and not used by another project can be added.
+  - When the "task_list" property of a project is modified, the "linked_project" property of the task that was added is automatically updated with the project's ID.
+  - when updating "task_lis" if the task ID is already in the project, the task is deleted from the project but with a confirmation message before.
+  - The deadline must be today or later and must follow the format YYYY-MM-DD.
+- Delete a project.
+  - If a project is deleted, the "linked_project" property of any task linked to this project is also deleted.
+- return.
+- quit.
 
-- **`requirements.txt`**:
-  - Lists all Python dependencies required for running the project.
+**Task Management**
+- Show all tasks (the long description property is not displayed). 
+- Show the details of a task using its ID (the detailed description property is displayed).
+- Add a new task
+    - The ID is generated automatically. If a task is deleted, its ID is reused for the next task creation
+    - We can choose to add a linked project or not if we do the task ID is added to the property tak_list of the project add.
+    - Only one project can be linked with a task
+- Update a task
+  - In the "linked_project" property only a project ID already existing on the project file can be added. the task ID is added to the property tak_list of the project add.
+  - If a project is already linked with the task, we can't update it, to do so we go to manage a project.
+  - The deadline must be today or later and must follow the format YYYY-MM-DD.
+- Delete a task
+  - If a task is deleted, the task ID is removed from the "task_list" property of any project linked to this task.
+- return
+- quit
 
-#### **Controller Layer**
-- **`controller.py`**:
-  - Manages the interaction between the user interface (`project.py`) and the model layer.
-  - Handles operations such as fetching, updating, and saving data.
-
-#### **Model Layer**
-- **`model/__init__.py`**:
-  - Initializes the model package for importing submodules.
-
-- **`model/data_type.py`**:
-  - Defines base data structures and common utilities used across models.
-
-- **`model/project_.py`**:
-  - Implements the `Project` class, representing project entities and their attributes.
-
-- **`model/task.py`**:
-  - Implements the `Task` class, representing task entities and their relationships with projects.
-#### **database file**
-- **`DB/projects.csv`**: Stores project data, including details like name, description, creation date, deadline, and linked tasks.
-
-- **`DB/tasks.csv`**: Stores task data, including task names, descriptions, deadlines, and linked projects.
-
----
-
-### Design Choices:
-1. **MVC-inspired Structure**:
-   - Maintains a separation between data, control logic, and interface to enhance scalability and maintainability.
-   - some of the Control functions are kept in `project.py` for testing purposes as per requirements for CS50 final project.
-
-2. **Object-Oriented Models**:
-   - Projects and tasks are encapsulated in classes, ensuring a clear representation of data and behaviors.
-
-3. **CSV for Storage**:
-   - Chosen for simplicity and portability. Though less robust than databases, it allows easy inspection and modification of data files.
-
-4. **Scalability**:
-   - The modular design facilitates future extensions, such as integrating a database or a graphical user interface.
-
----
 
 ## Usage Example
-
-### Run the application 
+### Launching the Application
 ```
-...\project> python project.py
+python project.py
 ```
-### Initial Menu
+### Project and TaskManagement Workflow
+#### 1. Main Menu Navigation
 ```
-★★★  Welcome to CS50 Poject ★★★
+★★★  Welcome to CS50 Project ★★★
 ▶▶  Project and Tasks Management ◀◀
 
 ▶️  what do you want to do❓
-    1️⃣ . 🎯 Manage your projects.
-    2️⃣ . ✅ Manage your tasks.
-    3️⃣ . ❌ Exit()
-          
+    1️⃣ . 🎯  Manage your projects.
+    2️⃣ . ✅  Manage your tasks.
+    3️⃣ . ❌  Exit()
+ ```
+#### 2. Displaying Projects
+```
 🔵 Choose an option: 1
-```
-### Project Management Submenu
-```
+
 ▶️  What do you want to do❓
-    1️⃣ . 👁️ Display projects
-    2️⃣ . 👁️ Display a project with id
+    1️⃣ . 👁️  Display projects
+    2️⃣ . 👁️  Display a project with id
     3️⃣ . ➕ Add project
     4️⃣ . 🔄 Update project
     5️⃣ . ➖ Delete project
     6️⃣ . 🔙 Back
     7️⃣ . ❌ Exit
-```
-#### 1. View all projects
-
-```
+    
 🔵 Choose an option: 1
-+------+--------------+-------------------+-----------------+-------------+---------+-------------+
-|   id | name         | description       | creation_date   | dead_line   | state   | task_list   |
-+======+==============+===================+=================+=============+=========+=============+
-|    1 | project test | short description | 2024-12-01      | 2025-01-01  | To do   | ['1']       |
-+------+--------------+-------------------+-----------------+-------------+---------+-------------+
-|    2 | p2           | sd                | 2024-12-01      | 2025-01-01  | To do   | []          |
-+------+--------------+-------------------+-----------------+-------------+---------+-------------+
-|    3 | p3           | p3 desc           | 2024-12-01      | 2025-01-01  | To do   | ['2']       |
-+------+--------------+-------------------+-----------------+-------------+---------+-------------+
-Press Enter to continue ➡️  ...
++------+------------------------+-------------------------------+-----------------+-------------+-------------+-------------+
+|   id | name                   | description                   | creation_date   | deadline   | state       | task_list   |
++======+========================+===============================+=================+=============+=============+=============+
+|    1 | Website Redesign       | Redesign the company website  | 2024-12-01      | 2025-01-15  | In Progress | ['1', '2']  |
++------+------------------------+-------------------------------+-----------------+-------------+-------------+-------------+
+|    2 | Mobile App Development | Develop a mobile application  | 2024-12-01      | 2025-02-28  | To do       | ['4', '5']  |
+|      |                        | for internal use              |                 |             |             |             |
++------+------------------------+-------------------------------+-----------------+-------------+-------------+-------------+
+|    3 | Marketing Campaign     | Plan a marketing campaign for | 2024-12-01      | 2025-03-01  | To do       | []          |
+|      |                        | Q1 2025                       |                 |             |             |             |
++------+------------------------+-------------------------------+-----------------+-------------+-------------+-------------+
+Press Enter to continue ➡️  ... 
 ```
-#### 2. view a single project
+#### 3. Displaying a single project
 ```
+▶️  What do you want to do❓
+    1️⃣ . 👁️  Display projects
+    2️⃣ . 👁️  Display a project with id
+    ...
+    
 🔵 Choose an option: 2
-➡️  Enter the project id you want to view: 1
-+------+--------------+-------------------+-----------------------------+-----------------+-------------+---------+-------------+
-|   id | name         | description       | detailed_description        | creation_date   | dead_line   | state   | task_list   |
-+======+==============+===================+=============================+=================+=============+=========+=============+
-|    1 | project test | short description | longer detailed description | 2024-12-01      | 2025-01-01  | To do   | ['1']       |
-+------+--------------+-------------------+-----------------------------+-----------------+-------------+---------+-------------+
+➡️  Enter the project id you want to view: 2
++------+------------------------+------------------------------+----------------------------+-----------------+-------------+---------+-------------+
+|   id | name                   | description                  | detailed_description       | creation_date   | deadline   | state   | task_list   |
++======+========================+==============================+============================+=================+=============+=========+=============+
+|    2 | Mobile App Development | Develop a mobile application | Build an app to streamline | 2024-12-01      | 2025-02-28  | To do   | ['4', '5']  |
+|      |                        | for internal use             | employee workflows         |                 |             |         |             |
++------+------------------------+------------------------------+----------------------------+-----------------+-------------+---------+-------------+
 
 Project Tasks:
-+------+-----------+-------------------+-----------------+-------------+---------+------------------+
-|   id | name      | description       | creation_date   | dead_line   | state   |   linked_project |
-+======+===========+===================+=================+=============+=========+==================+
-|    1 | tash test | short description | 2024-12-01      | 2025-01-01  | To do   |                1 |
-+------+-----------+-------------------+-----------------+-------------+---------+------------------+
++------+-------------------+------------------------------+-----------------+-------------+-------------+------------------+
+|   id | name              | description                  | creation_date   | deadline   | state       |   linked_project |
++======+===================+==============================+=================+=============+=============+==================+
+|    4 | App Wireframes    | Design wireframes for the    | 2024-12-03      | 2024-12-20  | In Progress |                2 |
+|      |                   | mobile app                   |                 |             |             |                  |
++------+-------------------+------------------------------+-----------------+-------------+-------------+------------------+
+|    5 | Build App Backend | Develop backend APIs for the | 2024-12-10      | 2025-02-20  | To do       |                2 |
+|      |                   | mobile app                   |                 |             |             |                  |
++------+-------------------+------------------------------+-----------------+-------------+-------------+------------------+
+Press Enter to continue ➡️  ... 
 ```
+#### 4. Adding a New Project
+```
+▶️  What do you want to do❓
+    1️⃣ . 👁️  Display projects
+    2️⃣ . 👁️  Display a project with id
+    3️⃣ . ➕ Add project
+    ...
+    
+🔵 Choose an option: 3
+➡️  Enter project name: project test
+➡️  Entrer a short description for the project: a short description
+➡️  Enter a detailed description for the project: a longer detailed description
+➡️  Enter deadline (YYYY-MM-DD ie:2024-12-31): 2024-12-05
+🟢 your project has been added successfully with ID = 4 🟢
+Press Enter to continue ➡️  ... 
+```
+#### 5. Updating a Project
+```
+▶️  What do you want to do❓
+    ...
+    4️⃣ . 🔄 Update project
+    ...
+    
+🔵 Choose an option: 4
+➡️  Enter project ID you want to update: 4
++------+--------------+---------------------+-------------------------------+-----------------+-------------+---------+-------------+
+|   id | name         | description         | detailed_description          | creation_date   | deadline   | state   | task_list   |
++======+==============+=====================+===============================+=================+=============+=========+=============+
+|    4 | project test | a short description | a longer detailed description | 2024-12-04      | 2024-12-05  | To do   | []          |
++------+--------------+---------------------+-------------------------------+-----------------+-------------+---------+-------------+
+🔄  Which Property you want to update ?: task list
+📋  list of available task : ['3: Backend Integration', '6: Create Marketing Assets']
+➡️  Enter the ID of the task you want to add to this project: 6
+🟢  The property 'task_list' has been updated successfully! 🟢
 
+▶️  What do you want to do❓
+    1️⃣ . 👁️  Display projects
+    2️⃣ . 👁️  Display a project with id
+    ...
+    
+🔵 Choose an option: 2
+➡️  Enter the project id you want to view: 4
++------+--------------+---------------------+-------------------------------+-----------------+-------------+---------+-------------+
+|   id | name         | description         | detailed_description          | creation_date   | deadline   | state   | task_list   |
++======+==============+=====================+===============================+=================+=============+=========+=============+
+|    4 | project test | a short description | a longer detailed description | 2024-12-04      | 2024-12-05  | To do   | ['6']       |
++------+--------------+---------------------+-------------------------------+-----------------+-------------+---------+-------------+
 
+Project Tasks:
++------+-------------------------+-----------------------------+-----------------+-------------+---------+------------------+
+|   id | name                    | description                 | creation_date   | deadline   | state   |   linked_project |
++======+=========================+=============================+=================+=============+=========+==================+
+|    6 | Create Marketing Assets | Develop marketing materials | 2024-12-05      | 2025-02-15  | To do   |                4 |
+|      |                         | for the campaign            |                 |             |         |                  |
++------+-------------------------+-----------------------------+-----------------+-------------+---------+------------------+
+Press Enter to continue ➡️  ... 
+```
+#### 6. Deleting a Project
+```
+▶️  What do you want to do❓
+    ...
+    5️⃣ . ➖ Delete project
+    ...
+    
+🔵 Choose an option: 5
+➡️  Enter the project ID you want to delete: 4
++------+--------------+---------------------+-------------------------------+-----------------+-------------+---------+-------------+
+|   id | name         | description         | detailed_description          | creation_date   | deadline   | state   | task_list   |
++======+==============+=====================+===============================+=================+=============+=========+=============+
+|    4 | project test | a short description | a longer detailed description | 2024-12-04      | 2024-12-05  | To do   | ['6']       |
++------+--------------+---------------------+-------------------------------+-----------------+-------------+---------+-------------+
+⚠️  Are You sur you want delete this project (yes/no)❓: y
+🟢  Your project has been deleted successfully 🟢
+```
+### Task Management Workflow
+for task management, its same use as project management.
+#### 1. Switching to Task Management
+```
+▶️  What do you want to do❓
+    1️⃣ . 👁️  Display projects
+    2️⃣ . 👁️  Display a project with id
+    3️⃣ . ➕ Add project
+    4️⃣ . 🔄 Update project
+    5️⃣ . ➖ Delete project
+    6️⃣ . 🔙 Back
+    7️⃣ . ❌ Exit
+    
+🔵 Choose an option: 6
 
+▶️  what do you want to do❓
+    1️⃣ . 🎯  Manage your projects.
+    2️⃣ . ✅  Manage your tasks.
+    3️⃣ . ❌  Exit()
+          
+🔵 Choose an option: 2
+
+▶️  What do you want to do❓
+    1️⃣ . 👁️  Display tasks
+    2️⃣ . 👁️  Display a task with id
+    3️⃣ . ➕ Add task
+    ...
+    
+🔵 Choose an option: 1
++------+-------------------------+------------------------------+-----------------+-------------+-------------+------------------+
+|   id | name                    | description                  | creation_date   | deadline   | state       | linked_project   |
++======+=========================+==============================+=================+=============+=============+==================+
+|    1 | Create Wireframes       | Design wireframes for the    | 2024-12-02      | 2024-12-15  | Completed   | 1                |
+|      |                         | website redesign             |                 |             |             |                  |
++------+-------------------------+------------------------------+-----------------+-------------+-------------+------------------+
+|    2 | Develop Frontend        | Implement frontend for the   | 2024-12-05      | 2025-01-10  | In Progress | 1                |
+|      |                         | website                      |                 |             |             |                  |
++------+-------------------------+------------------------------+-----------------+-------------+-------------+------------------+
+|    3 | Backend Integration     | Connect the backend to the   | 2024-12-08      | 2025-01-15  | To do       |                  |
+|      |                         | frontend                     |                 |             |             |                  |
++------+-------------------------+------------------------------+-----------------+-------------+-------------+------------------+
+|    4 | App Wireframes          | Design wireframes for the    | 2024-12-03      | 2024-12-20  | In Progress |                  |
+|      |                         | mobile app                   |                 |             |             |                  |
++------+-------------------------+------------------------------+-----------------+-------------+-------------+------------------+
+|    5 | Build App Backend       | Develop backend APIs for the | 2024-12-10      | 2025-02-20  | To do       | 2                |
+|      |                         | mobile app                   |                 |             |             |                  |
++------+-------------------------+------------------------------+-----------------+-------------+-------------+------------------+
+|    6 | Create Marketing Assets | Develop marketing materials  | 2024-12-05      | 2025-02-15  | To do       |                  |
+|      |                         | for the campaign             |                 |             |             |                  |
++------+-------------------------+------------------------------+-----------------+-------------+-------------+------------------+
+Press Enter to continue ➡️  ... 
+```
+### Exiting the Application
+```
+Choose an option: 3  # Exit from main menu
+
+👋👋 Goodbye! See you soon !!🙂
+
+```
+```
+(CTRL+D )
+
+👋👋 Goodbye! See you soon !!🙂
+
+```
+### Error message
+#### deadline error
+```
+➡️  Enter deadline (YYYY-MM-DD ie:2024-12-31): 2024-12-03  # Eralier date than today
+⚠️ Deadline must be today or later, and in the format (YYYY-MM-DD, e.g., 2025-01-30) ⚠️
+➡️  Enter deadline (YYYY-MM-DD ie:2024-12-31): 2025-31-12  # Wrong format YYYY-DD-MM
+⚠️ Deadline must be today or later, and in the format (YYYY-MM-DD, e.g., 2025-01-30) ⚠️
+```

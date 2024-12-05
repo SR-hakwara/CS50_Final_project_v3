@@ -28,27 +28,27 @@ def main() -> None:
             task_list: Tasks = Tasks()  # Object Tasks
 
             print(get_general_option())
-            choice_g: str = input(f"🔵 {E}Choose an option:{E} ").strip()
+            choice_g: str = input(f"🔵 {S}Choose an option: {E}").strip()
             match choice_g:
                 case "1":
                     # Project management submenu
 
                     while True:
                         print(get_project_option())
-                        choice_project = input(f"🔵 {S}Choose an option:{E} ").strip()
+                        choice_project = input(f"🔵 {S}Choose an option: {E}").strip()
                         match choice_project:
                             case "1":
                                 # Display all projects
                                 print(view_all(project_list))
-                                input(f"{S}Press Enter to continue{E} ➡️  ... ")
+                                input(f"{S}Press Enter to continue ➡️  ... {E}")
                             case "2":
                                 # Display single project details
                                 print(view_single_data(project_list))
-                                input(f"{S}Press Enter to continue{E} ➡️  ... ")
+                                input(f"{S}Press Enter to continue ➡️  ... {E}")
                             case "3":
                                 # Add a new project
                                 add_data(project_list)
-                                input(f"{S}Press Enter to continue{E} ➡️  ... ")
+                                input(f"{S}Press Enter to continue ➡️  ... {E}")
                             case "4":
                                 # Update project
                                 update_data(project_list, task_list)
@@ -60,30 +60,31 @@ def main() -> None:
                                 break
                             case "7":
                                 # Exit application
+                                print(f"\n👋👋 {S} Goodbye! See you soon !!{E}🙂\n")
                                 sys.exit()
                             case _:
                                 # Handle invalid option
                                 print(invalid_option())
-                                input("Press Enter to continue ➡️  ... ")
+                                input(f"{S}Press Enter to continue ➡️  ... {E}")
                         ...
                 case "2":
                     # Task management submenu
                     while True:
                         print(get_task_option())
-                        choice_task: str = input("🔵 Choose an option: ").strip()
+                        choice_task: str = input(f"{S}🔵 Choose an option: {E}").strip()
                         match choice_task:
                             case "1":
                                 # Display all tasks
                                 print(view_all(task_list))
-                                input("Press Enter to continue ➡️  ... ")
+                                input(f"{S}Press Enter to continue ➡️  ... {E}")
                             case "2":
                                 # Display single task details
                                 print(view_single_data(task_list))
-                                input("Press Enter to continue ➡️  ... ")
+                                input(f"{S}Press Enter to continue ➡️  ... {E}")
                             case "3":
                                 # Add a new task
-                                add_data(task_list)
-                                input("Press Enter to continue ➡️  ... ")
+                                add_data(task_list, project_list)
+                                input(f"{S}Press Enter to continue ➡️  ... {E}")
                             case "4":
                                 # Update task
                                 update_data(task_list, project_list)
@@ -95,22 +96,23 @@ def main() -> None:
                                 break
                             case "7":
                                 # Exit application
+                                print(f"\n👋👋 {S} Goodbye! See you soon !!{E}🙂\n")
                                 sys.exit()
                             case _:
                                 # Handle invalid option
                                 print(invalid_option())
-                                input("Press Enter to continue ➡️  ... ")
+                                input(f"{S}Press Enter to continue ➡️  ... {E}")
                 case "3":
                     # Exit application
-                    print("Goodbye! See you soon !! =)")
+                    print(f"\n👋👋 {S} Goodbye! See you soon !!{E}🙂\n")
                     break
                 case _:
                     # Handle invalid option
                     print(invalid_option())
-                    input("Press Enter to continue ➡️  ... ")
+                    input(f"{S}Press Enter to continue ➡️  ... ")
         sys.exit()
     except EOFError:
-        print(f"\n👋👋 {S} Goodbye! See you soon !!{E}🙂")
+        print(f"\n\n👋👋 {S} Goodbye! See you soon !!{E}🙂\n")
         sys.exit()
 
 
@@ -176,12 +178,13 @@ def view_single_data(data_list):
         return ""
 
 
-def add_data(data_list) -> None:
+def add_data(data_list, project_list=None) -> None:
     """
     Add a new project or task to the data_list.
     We don't use objects in this case but just data_list.data.
     Args:
         data_list : Data [Projects or Tasks]: List to add data to
+        project_list : If data is a Task we import project too, to update it if linked_project is added
     Returns:
         None
     """
@@ -205,9 +208,9 @@ def add_data(data_list) -> None:
     # Validate deadline with maximum 3 attempts
     compter = 0
     while compter < 3:
-        dead_line = input("➡️  Enter dead line (YYYY-MM-DD ie:2024-12-31): ").strip()
-        if is_valid_deadline(dead_line):
-            data_input["dead_line"] = dead_line
+        deadline = input("➡️  Enter deadline (YYYY-MM-DD ie:2024-12-31): ").strip()
+        if is_valid_deadline(deadline):
+            data_input["deadline"] = deadline
             break
         else:
             print(
@@ -221,8 +224,47 @@ def add_data(data_list) -> None:
     if data_list.data_type == "project":
         data_input["task_list"] = []
     elif data_list.data_type == "task":
-        data_input["linked_project"] = ""
-
+        confirmation = (
+            input("➡️  you want to link this task to a existing project?(yes/no): ")
+            .strip()
+            .lower()
+        )
+        if not confirmation in ["yes", "y"]:
+            data_input["linked_project"] = ""
+        else:
+            project_list.data_from_csv()
+            available_project = []
+            for project in project_list.objects:
+                available_project.append(f"{project.id}: {project.name} ")
+            print(f"Available projects : {available_project}")
+            compter_id = 0
+            while compter_id < 3:
+                try:
+                    project_id = int(
+                        input(
+                            "➡️  Enter the ID of the project you want to add to this task: "
+                        ).strip()
+                    )
+                    print(f"all ids: {project_list.get_all_ids()}")
+                    if project_id in project_list.get_all_ids():
+                        print(project_id)
+                        data_input["linked_project"] = str(project_id)
+                        project_list.get_object(str(project_id)).task_list += [id_]
+                        save_change(project_list)
+                        break
+                    else:
+                        print("⚠️  No project with this ID ⚠️")
+                        compter_id += 1
+                except ValueError as e:
+                    print(e)
+                    print("⚠️  Invalid input. Please enter a numeric ID. ⚠️")
+                    compter_id += 1
+            if compter_id == 3:
+                print("⚠️ 3 wrong attempt start again ⚠️")
+                return
+    print(
+        f"🟢 your {data_list.data_type} has been added successfully with ID = {id_} 🟢"
+    )
     data_list.data.append(data_input)
     data_list.data_to_csv()
 
@@ -264,18 +306,22 @@ def update_data(data_list_1, data_list_2) -> None:
                 if property_ == "task_list":
                     compteur_err_task = 0
                     all_task_ids = data_list_2.get_all_ids()
+                    used_task = [
+                        item
+                        for sublist in data_list_1.get_all_property_value("task_list")
+                        for item in sublist
+                    ]
+                    used_task = [int(task) for task in used_task]
+                    available_task_id = list(set(all_task_ids) - set(used_task))
+                    available_task = []
+                    for id_task in available_task_id:
+                        available_task.append(
+                            f"{id_task}: {data_list_2.get_object(str(id_task)).name}"
+                        )
                     while compteur_err_task < 3:
-                        print(f"📋  List of task : {all_task_ids}")
-                        used_task = [
-                            item
-                            for sublist in data_list_1.get_all_property_value(
-                                "task_list"
-                            )
-                            for item in sublist
-                        ]
-                        print(f"📋  Already used_tasks={used_task}")
+                        print(f"📋  list of available task : {available_task}")
                         value = input(
-                            "➡️  Enter the new value of task you want to add to this project: "
+                            "➡️  Enter the ID of the task you want to add to this project: "
                         ).strip()
                         # Validate task usage in another project
                         if not value in data_.task_list and value in used_task:
@@ -316,9 +362,60 @@ def update_data(data_list_1, data_list_2) -> None:
                         break
                 # Special handling for linked_project updates
                 elif property_ == "linked_project":
-                    raise ValueError(
-                        "🔴  To update the task linked_project go to project and update task_list 🔴"
-                    )
+                    if data_.linked_project == "":
+                        available_project = []
+                        for project in data_list_2.objects:
+                            available_project.append(f"{project.id}: {project.name} ")
+                        print(f"Available projects : {available_project}")
+                        compter_id = 0
+                        while compter_id < 3:
+                            try:
+                                project_id = int(
+                                    input(
+                                        "➡️  Enter the ID of the project you want to add to this task: "
+                                    ).strip()
+                                )
+                                print(f"all ids: {data_list_2.get_all_ids()}")
+                                if project_id in data_list_2.get_all_ids():
+                                    print(project_id)
+                                    data_.linked_project = str(project_id)
+                                    data_list_2.get_object(
+                                        str(project_id)
+                                    ).task_list += [id_]
+                                    save_change(data_list_2)
+                                    save_change(data_list_1)
+                                    break
+                                else:
+                                    print("⚠️  No project with this ID ⚠️")
+                                    compter_id += 1
+                            except ValueError as e:
+                                print(e)
+                                print("⚠️  Invalid input. Please enter a numeric ID. ⚠️")
+                                compter_id += 1
+                        if compter_id == 3:
+                            print("⚠️ 3 wrong attempt start again ⚠️")
+                            return
+                    else:
+                        raise ValueError(
+                            "🔴  A project is already linked to this task. To update the task linked_project go to project and update task_list 🔴"
+                        )
+                elif property_ == "deadline":
+                    compter_deadline = 0
+                    while compter_deadline < 3:
+                        deadline = input("➡️  Enter deadline (YYYY-MM-DD ie:2024-12-31): ").strip()
+                        if is_valid_deadline(deadline):
+                            setattr(data_, property_, deadline)
+                            save_change(data_list_1)
+                            break
+                        else:
+                            print(
+                                "⚠️ Deadline must be today or later, and in the format (YYYY-MM-DD, e.g., 2025-01-30) ⚠️"
+                            )
+                            compter_deadline += 1
+                    if compter_deadline == 3:
+                        print("⚠️ 3 wrong attempt start again ⚠️")
+                        return
+
                 elif property_ == "id":
                     raise ValueError("🔴  You can't modify the id 🔴")
                 # Update any other properties
@@ -429,11 +526,11 @@ def new_id(list_: Data) -> str:
     return str(new_id_)
 
 
-def is_valid_deadline(dead_line: str, today: date = date.today()) -> bool:
+def is_valid_deadline(deadline: str, today: date = date.today()) -> bool:
     """
     Validate deadline format YYYY-MM-DD and ensure it is not in the past.
     Args:
-        dead_line (str): Deadline date string
+        deadline (str): Deadline date string
         today (date, optional for testing purpose): Reference date for validation. Defaults to today.
     Returns:
         bool: True if deadline is valid, False otherwise
@@ -442,10 +539,15 @@ def is_valid_deadline(dead_line: str, today: date = date.today()) -> bool:
     pattern = (
         r"^(?P<Year>20[2-9][0-9])-(?P<Month>0[0-9]|1[0-2])-(?P<DD>[0-2][0-9]|3[0-1])$"
     )
-    match = re.match(pattern, dead_line)
-    if match and today <= date.fromisoformat(dead_line):
-        return True
-    return False
+    match = re.match(pattern, deadline)
+    try:
+        if match and today <= date.fromisoformat(deadline):
+            return True
+        else:
+            return False
+    except ValueError as e:
+        print(e)
+        return False
 
 
 def get_general_option():
@@ -459,8 +561,8 @@ def get_general_option():
 
 def get_project_option():
     return """\n▶️  What do you want to do❓
-    1️⃣ . 👁️ Display projects
-    2️⃣ . 👁️ Display a project with id
+    1️⃣ . 👁️  Display projects
+    2️⃣ . 👁️  Display a project with id
     3️⃣ . ➕ Add project
     4️⃣ . 🔄 Update project
     5️⃣ . ➖ Delete project
@@ -471,8 +573,8 @@ def get_project_option():
 
 def get_task_option():
     return """\n▶️  What do you want to do❓
-    1️⃣ . 👁️ Display tasks
-    2️⃣ . 👁️ Display a task with id
+    1️⃣ . 👁️  Display tasks
+    2️⃣ . 👁️  Display a task with id
     3️⃣ . ➕ Add task
     4️⃣ . 🔄 Update task
     5️⃣ . ➖ Delete task
