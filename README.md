@@ -1,5 +1,5 @@
 # Project and Task Management Application
-#### Video Demo:  <URL HERE> [URL TO ADD]
+#### Video Demo:  <[URL HERE](https://youtu.be/fTGGksKg6LY)>
 #### Description: An application for project and task management, which uses the command line to interact with the user
 ## Overview
 This CLI (Command Line Interface) application for project and task management is a simple tool developed in Python.
@@ -61,24 +61,28 @@ This improves the user experience and prevents issues during operation.
 - quit
 
 **Project Management**
-- Show all projects (the long description property is not displayed). 
-- Show the details of a project using its ID (the detailed description property is displayed).
-  - display any tasks linked to the project.
+- Show all projects
+  - The detailed description property is not displayed.
+- Show the details of a project using its ID
+  - The detailed description property is displayed.
+  - Display any tasks linked to the project.
 - Add a new project:
   - The ID is generated automatically. If a project is deleted, its ID is reused for the next project creation.
 - Update a project:
-  - for the "task_list" only a task ID already existing on the task file and not used by another project can be added.
+  - For the "task_list" only a task ID already existing on the task file and not used by another project can be added.
   - When the "task_list" property of a project is modified, the "linked_project" property of the task that was added is automatically updated with the project's ID.
-  - when updating "task_lis" if the task ID is already in the project, the task is deleted from the project but with a confirmation message before.
+  - When updating "task_lis" if the task ID is already in the project, the task is deleted from the project but with a confirmation message before.
   - The deadline must be today or later and must follow the format YYYY-MM-DD.
 - Delete a project.
   - If a project is deleted, the "linked_project" property of any task linked to this project is also deleted.
-- return.
-- quit.
+- Return.
+- Quit.
 
 **Task Management**
-- Show all tasks (the long description property is not displayed). 
-- Show the details of a task using its ID (the detailed description property is displayed).
+- Show all tasks
+  - the long description property is not displayed.
+- Show the details of a task using its ID
+  - the detailed description property is displayed.
 - Add a new task
     - The ID is generated automatically. If a task is deleted, its ID is reused for the next task creation
     - We can choose to add a linked project or not if we do the task ID is added to the property tak_list of the project add.
@@ -121,7 +125,7 @@ python project.py
     5️⃣ . ➖ Delete project
     6️⃣ . 🔙 Back
     7️⃣ . ❌ Exit
-    
+
 🔵 Choose an option: 1
 +------+------------------------+-------------------------------+-----------------+-------------+-------------+-------------+
 |   id | name                   | description                   | creation_date   | deadline   | state       | task_list   |
@@ -134,7 +138,7 @@ python project.py
 |    3 | Marketing Campaign     | Plan a marketing campaign for | 2024-12-01      | 2025-03-01  | To do       | []          |
 |      |                        | Q1 2025                       |                 |             |             |             |
 +------+------------------------+-------------------------------+-----------------+-------------+-------------+-------------+
-Press Enter to continue ➡️  ... 
+Press Enter to continue ➡️  ...
 ```
 #### 3. Displaying a single project
 ```
@@ -142,7 +146,7 @@ Press Enter to continue ➡️  ...
     1️⃣ . 👁️  Display projects
     2️⃣ . 👁️  Display a project with id
     ...
-    
+
 🔵 Choose an option: 2
 ➡️  Enter the project id you want to view: 2
 +------+------------------------+------------------------------+----------------------------+-----------------+-------------+---------+-------------+
@@ -162,7 +166,7 @@ Project Tasks:
 |    5 | Build App Backend | Develop backend APIs for the | 2024-12-10      | 2025-02-20  | To do       |                2 |
 |      |                   | mobile app                   |                 |             |             |                  |
 +------+-------------------+------------------------------+-----------------+-------------+-------------+------------------+
-Press Enter to continue ➡️  ... 
+Press Enter to continue ➡️  ...
 ```
 #### 4. Adding a New Project
 ```
@@ -171,14 +175,14 @@ Press Enter to continue ➡️  ...
     2️⃣ . 👁️  Display a project with id
     3️⃣ . ➕ Add project
     ...
-    
+
 🔵 Choose an option: 3
 ➡️  Enter project name: project test
 ➡️  Entrer a short description for the project: a short description
 ➡️  Enter a detailed description for the project: a longer detailed description
 ➡️  Enter deadline (YYYY-MM-DD ie:2024-12-31): 2024-12-05
 🟢 your project has been added successfully with ID = 4 🟢
-Press Enter to continue ➡️  ... 
+Press Enter to continue ➡️  ...
 ```
 #### 5. Updating a Project
 ```
@@ -186,7 +190,7 @@ Press Enter to continue ➡️  ...
     ...
     4️⃣ . 🔄 Update project
     ...
-    
+
 🔵 Choose an option: 4
 ➡️  Enter project ID you want to update: 4
 +------+--------------+---------------------+-------------------------------+-----------------+-------------+---------+-------------+
@@ -203,7 +207,7 @@ Press Enter to continue ➡️  ...
     1️⃣ . 👁️  Display projects
     2️⃣ . 👁️  Display a project with id
     ...
-    
+
 🔵 Choose an option: 2
 ➡️  Enter the project id you want to view: 4
 +------+--------------+---------------------+-------------------------------+-----------------+-------------+---------+-------------+
@@ -219,7 +223,7 @@ Project Tasks:
 |    6 | Create Marketing Assets | Develop marketing materials | 2024-12-05      | 2025-02-15  | To do   |                4 |
 |      |                         | for the campaign            |                 |             |         |                  |
 +------+-------------------------+-----------------------------+-----------------+-------------+---------+------------------+
-Press Enter to continue ➡️  ... 
+Press Enter to continue ➡️  ...
 ```
 #### 6. Deleting a Project
 ```
@@ -227,7 +231,7 @@ Press Enter to continue ➡️  ...
     ...
     5️⃣ . ➖ Delete project
     ...
-    
+
 🔵 Choose an option: 5
 ➡️  Enter the project ID you want to delete: 4
 +------+--------------+---------------------+-------------------------------+-----------------+-------------+---------+-------------+
@@ -250,14 +254,14 @@ for task management, its same use as project management.
     5️⃣ . ➖ Delete project
     6️⃣ . 🔙 Back
     7️⃣ . ❌ Exit
-    
+
 🔵 Choose an option: 6
 
 ▶️  what do you want to do❓
     1️⃣ . 🎯  Manage your projects.
     2️⃣ . ✅  Manage your tasks.
     3️⃣ . ❌  Exit()
-          
+
 🔵 Choose an option: 2
 
 ▶️  What do you want to do❓
@@ -265,7 +269,7 @@ for task management, its same use as project management.
     2️⃣ . 👁️  Display a task with id
     3️⃣ . ➕ Add task
     ...
-    
+
 🔵 Choose an option: 1
 +------+-------------------------+------------------------------+-----------------+-------------+-------------+------------------+
 |   id | name                    | description                  | creation_date   | deadline   | state       | linked_project   |
@@ -288,7 +292,7 @@ for task management, its same use as project management.
 |    6 | Create Marketing Assets | Develop marketing materials  | 2024-12-05      | 2025-02-15  | To do       |                  |
 |      |                         | for the campaign             |                 |             |             |                  |
 +------+-------------------------+------------------------------+-----------------+-------------+-------------+------------------+
-Press Enter to continue ➡️  ... 
+Press Enter to continue ➡️  ...
 ```
 ### Exiting the Application
 ```
@@ -347,7 +351,9 @@ we have three attempts if we enter the wrong data for deadline, task_list and li
 
 This project represents a practical and functional application for managing projects and tasks.
 By combining Python's object-oriented programming with an MVC-inspired structure,
-the program achieves a balance between simplicity and extensibility. 
+the program achieves a balance between simplicity and extensibility.
+Previous versions of this program, which did not follow the MVC model,
+can still be found in the folder ./old_versions/. They reflect the iterations and attempts I made before reaching this final version.
 
 The use of CSV files for data persistence makes the system lightweight and accessible,
 while robust validation and error-handling ensure data integrity.
@@ -355,4 +361,4 @@ The application's modular design also lays the foundation for future improvement
 such as integrating a database or transitioning to a graphical interface.
 
 Thank you for exploring this project,
-which demonstrates the core principles of software development and highlights key aspects of the CS50 course. 
+which demonstrates the core principles of software development and highlights key aspects of the CS50 introduction to programming with python course.

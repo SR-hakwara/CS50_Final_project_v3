@@ -1,7 +1,7 @@
 import pytest
-
-from project import *
-from controller import Projects, Tasks
+from tabulate import tabulate
+from controller import *
+from project import add_data, update_data, delete_data, view_all, view_single_data
 from datetime import date, timedelta
 
 # this file was reformated by black module
